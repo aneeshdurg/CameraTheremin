@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
-from pyo import Server, SquareTable, SincTable, Osc
+from pyo import Server, SquareTable, SineLoop, Osc
 from math import pi as Pi
 from sys import argv
+from os import system as cmd
 
 #"depth" detection
 def getVal(frame):
@@ -21,7 +22,8 @@ def getVal(frame):
     hand = cnts[maxIndex]
     handLen = cv2.arcLength(hand, True)
     handCnt = cv2.approxPolyDP(hand, 0.0001*handLen, True)    
-    return thresh, cv2.contourArea(handCnt)
+    return thresh, cv2.contourArea(handCnt), len(cnts)
+
 #useful for debugging
 show = False
 if "-v" in argv:
@@ -30,14 +32,117 @@ if "-v" in argv:
 #Pyo server/objects
 s = Server().boot()
 s.start()
-wav = SincTable()
-out = Osc(table=wav).out()
-otherWav = SincTable()
+wav = SineLoop(freq=2*Pi*261.626).out()
+otherWav = SineLoop()
+notes = dict()
+notes['a'] = 220
+notes['b'] = 246.942
+notes['c'] = 261.626
+notes['d'] = 293.665
+notes['e'] = 329.628
+notes['f'] = 349.228
+notes['g'] = 391.995
+notes['highA'] = 440 
 #otherOut = Osc(table=otherWav).out()
 #camera
 cap = cv2.VideoCapture(0)
-def main():
+
+def initialize():
+    minDist = -1
+    maxDist = -1
+    counter = 0
+    actualcounter = 0
+    done = False
+    first = None
+    while True:
+        _, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        frame = frame[100:300, 100:300]
+        cv2.imshow('place hands', frame)
+        k = cv2.waitKey(30)
+        if k==ord('q'):
+            cv2.destroyAllWindows()
+            break
+    while not done:
+        cmd('cls')
+        actualcounter+=1
+        print actualcounter
+        _, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        frame = frame[100:300, 100:300] 
+        if first == None:
+            first = frame
+            continue
+        else:
+           frame = cv2.absdiff(first, frame)
+           cv2.imshow('abs', frame)
+           cv2.waitKey(30)
+        thresh, val, something= getVal(frame)
+        cv2.imshow('minPos', thresh)
+        if minDist == -1:
+            minDist = val
+        else:
+            if actualcounter<500:
+                continue
+            minDist = (minDist*counter+val)/(counter+1)
+        counter+=1
+        if counter==200:
+            done = True
     
+    actualcounter = 0
+    counter = 0
+    done = False
+    first = None
+    while True:
+        _, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        frame = frame[100:300, 100:300]
+        cv2.imshow('place hands', frame)
+        k = cv2.waitKey(30)
+        if k==ord('q'):
+            cv2.destroyAllWindows()
+            break
+    while not done:
+        cmd('cls')
+        actualcounter+=1
+        print actualcounter
+        _, frame = cap.read()
+        frame = cv2.flip(frame, 1)
+        frame = frame[100:300, 100:300] 
+        if first == None:
+            first = frame
+            continue
+        else:
+           frame = cv2.absdiff(first, frame)
+           cv2.imshow('abs', frame)
+           cv2.waitKey(30)
+        thresh, val, something = getVal(frame)
+        cv2.imshow('maxPos', thresh)
+        if maxDist == -1:
+            maxDist = val
+        else:
+            if actualcounter<500:
+                continue
+            maxDist = (maxDist*counter+val)/(counter+1)
+        counter+=1
+        if counter==200:
+            done = True
+    cv2.destroyAllWindows()
+    return minDist, maxDist
+
+def main():
+    minDist = 0
+    maxIndex = 0
+    if '-d' in argv:
+        minDist = 5000
+        maxDist = 30000
+    else:
+        minDist, maxDist = initialize()
+    print str(minDist)+' '+str(maxDist)
+    raw_input()
+    stepLength = maxDist-minDist
+    stepLength/=8
+    note = 'c'
     
     last = -1
     otherLast = -1
@@ -60,17 +165,34 @@ def main():
         #cropping frame for more accurate detection
         frame = cframe[100:300, 100:300]
         other = cframe[100:300, 300:500]
-        thresh, curr = getVal(frame)
-        otherThresh, otherCurr = getVal(other)
+        thresh, curr, numcnts = getVal(frame)
+        otherThresh, otherCurr, otherNumcnts = getVal(other)
     
         #Setting frequency based off of distance
         if abs(curr-last)>10:
-            print curr
-            f = int(curr/3000)
+            f = curr - minDist
+            f/=stepLength
+            f = int(f)
+            f%=8
+            if curr>maxDist:
+                f = 7
+            if curr<minDist:
+                f = 0
+            keys = notes.keys()
+            keys.sort()
+            note = keys[f]
+            cmd('cls')
+            #print str(curr)+' '+str(f)+' '+note
+            f = 2*Pi*notes[note]
+            if numcnts>50:
+                f = 0
+                note = " "
+            print 'current note: '+note
             oldFreq = wav.freq
-            while abs(oldFreq-Pi*f)>1:
-                oldFreq = (oldFreq+Pi*f)/2 
+            while abs(oldFreq-f)>1:
+                oldFreq = (oldFreq+f)/2 
                 wav.setFreq(oldFreq)
+            wav.setFreq(f)
         last = curr
         
         #if abs(otherCurr-otherLast)>10:
