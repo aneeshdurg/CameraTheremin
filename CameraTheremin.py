@@ -5,6 +5,14 @@ from math import pi as Pi
 from sys import argv
 from os import system as cmd
 
+#camera
+cap = cv2.VideoCapture(0)
+
+#useful for debugging
+show = False
+if "-v" in argv:
+    show = True
+
 #"depth" detection
 def getVal(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -23,30 +31,6 @@ def getVal(frame):
     handLen = cv2.arcLength(hand, True)
     handCnt = cv2.approxPolyDP(hand, 0.0001*handLen, True)    
     return thresh, cv2.contourArea(handCnt), len(cnts)
-
-#useful for debugging
-show = False
-if "-v" in argv:
-    show = True
-
-#Pyo server/objects
-s = Server().boot()
-s.start()
-wav = SineLoop(freq=2*Pi*261.626).out()
-wav.stop()
-#otherWav = SineLoop()
-notes = dict()
-notes['a'] = 220
-notes['b'] = 246.942
-notes['c'] = 261.626
-notes['d'] = 293.665
-notes['e'] = 329.628
-notes['f'] = 349.228
-notes['g'] = 391.995
-notes['highA'] = 440
-#otherOut = Osc(table=otherWav).out()
-#camera
-cap = cv2.VideoCapture(0)
 
 def initialize():
     minDist = -1
@@ -126,15 +110,15 @@ def main():
     if '-e' in argv:
         err = int(raw_input("Please enter an error threshold"))
     print str(minDist)+' '+str(maxDist)
-    raw_input()
+    raw_input('Press any key to continue')
     stepLength = maxDist-minDist
     scaleFactor = 220.0/stepLength
     stepLength/=8
-    note = 'c'
+    note = ' '
     
     last = -1
-    otherLast = -1
     first = None
+
     wav.out()
     stopped = False
     #main loop
@@ -154,11 +138,12 @@ def main():
             cv2.imshow('abs', cframe)
         #cropping frame for more accurate detection
         frame = cframe[100:300, 100:300]
-        other = cframe[100:300, 300:500]
         thresh, curr, numcnts = getVal(frame)
-        otherThresh, otherCurr, otherNumcnts = getVal(other)
     
         #Setting frequency based off of distance
+        #normal mode sets frequency to one of the frequencies in the 
+        #dictionary. Continuous mode maps the frequency to the range
+        #220Hz(a) to 440Hz(HighA)
         if abs(curr-last)>10:
             f = curr - minDist
             if contScale: 
@@ -177,7 +162,7 @@ def main():
                 note = keys[f]
                 f = notes[note]
             cmd('cls')
-            if numcnts>err:
+            if numcnts>err or curr<minDist/2:
                 f = 0
                 note = " "
             print 'current note: '+note
@@ -189,19 +174,9 @@ def main():
             wav.setFreq(f)
         last = curr
         
-        #if abs(otherCurr-otherLast)>10:
-        #    print "other"+str(otherCurr)
-        #    f = int(otherCurr/300+10)
-        #    oldFreq = otherWav.freq
-        #    while abs(oldFreq-Pi*f)>1:
-        #        oldFreq = (oldFreq+Pi*f)/2
-        #        otherWav.setFreq(oldFreq)
-        #otherLast = otherCurr
-    
         #useful for debugging
         if show:
             cv2.imshow("t", thresh)
-            cv2.imshow("ot", otherThresh)
         
         cv2.imshow("Theremin", orgframe)
         k = cv2.waitKey(30)
@@ -216,7 +191,22 @@ def main():
             else:
                 wav.stop()
                 stopped = True
+
 if __name__ == "__main__":
+    #Pyo server/objects
+    s = Server().boot()
+    s.start()
+    wav = SineLoop(freq=2*Pi*261.626)
+    notes = dict()
+    notes['a'] = 220
+    notes['b'] = 246.942
+    notes['c'] = 261.626
+    notes['d'] = 293.665
+    notes['e'] = 329.628
+    notes['f'] = 349.228
+    notes['g'] = 391.995
+    notes['highA'] = 440
+    
     try:
         main()
     except KeyboardInterrupt:
