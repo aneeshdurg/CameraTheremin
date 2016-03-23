@@ -49,6 +49,8 @@ def initialize():
         if first == None:
             first = frame
             continue
+        elif actualcounter == 200:
+            first = frame
         else:
            frame = cv2.absdiff(first, frame)
            cv2.imshow('abs', frame)
@@ -79,6 +81,8 @@ def initialize():
         if first == None:
             first = frame
             continue
+        elif actualcounter == 200:
+            first = frame
         else:
            frame = cv2.absdiff(first, frame)
            cv2.imshow('abs', frame)
@@ -126,7 +130,7 @@ def main():
         _, orgframe = cap.read()
         cframe = cv2.flip(orgframe, 1)
         orgframe = cv2.flip(orgframe, 1)
-        orgframe = orgframe[100:300, 100:500]
+        orgframe = orgframe[100:300, 100:300]#500]
     
         #background subtraction assuming mostly static background
         if first == None:
