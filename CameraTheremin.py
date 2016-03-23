@@ -168,9 +168,14 @@ def main():
             print 'current note: '+note
             f = 2*Pi*f
             oldFreq = wav.freq
-            while abs(oldFreq-f)>1:
-                oldFreq = (oldFreq+f)/2 
-                wav.setFreq(oldFreq)
+            if oldFreq!=0:
+                while abs(oldFreq-f)>0.05:
+                    #oldFreq = (oldFreq+f)/2 
+                    if oldFreq<f:
+                        oldFreq+=0.05
+                    else:
+                        oldFreq-=0.05
+                    wav.setFreq(oldFreq)
             wav.setFreq(f)
         last = curr
         
