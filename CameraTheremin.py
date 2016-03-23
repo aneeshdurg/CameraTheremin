@@ -33,7 +33,8 @@ if "-v" in argv:
 s = Server().boot()
 s.start()
 wav = SineLoop(freq=2*Pi*261.626).out()
-otherWav = SineLoop()
+wav.stop()
+#otherWav = SineLoop()
 notes = dict()
 notes['a'] = 220
 notes['b'] = 246.942
@@ -42,7 +43,7 @@ notes['d'] = 293.665
 notes['e'] = 329.628
 notes['f'] = 349.228
 notes['g'] = 391.995
-notes['highA'] = 440 
+notes['highA'] = 440
 #otherOut = Osc(table=otherWav).out()
 #camera
 cap = cv2.VideoCapture(0)
@@ -54,15 +55,6 @@ def initialize():
     actualcounter = 0
     done = False
     first = None
-    while True:
-        _, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        frame = frame[100:300, 100:300]
-        cv2.imshow('place hands', frame)
-        k = cv2.waitKey(30)
-        if k==ord('q'):
-            cv2.destroyAllWindows()
-            break
     while not done:
         cmd('cls')
         actualcounter+=1
@@ -82,7 +74,7 @@ def initialize():
         if minDist == -1:
             minDist = val
         else:
-            if actualcounter<500:
+            if actualcounter<200:
                 continue
             minDist = (minDist*counter+val)/(counter+1)
         counter+=1
@@ -93,15 +85,6 @@ def initialize():
     counter = 0
     done = False
     first = None
-    while True:
-        _, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        frame = frame[100:300, 100:300]
-        cv2.imshow('place hands', frame)
-        k = cv2.waitKey(30)
-        if k==ord('q'):
-            cv2.destroyAllWindows()
-            break
     while not done:
         cmd('cls')
         actualcounter+=1
@@ -121,7 +104,7 @@ def initialize():
         if maxDist == -1:
             maxDist = val
         else:
-            if actualcounter<500:
+            if actualcounter<200:
                 continue
             maxDist = (maxDist*counter+val)/(counter+1)
         counter+=1
@@ -131,6 +114,7 @@ def initialize():
     return minDist, maxDist
 
 def main():
+    contScale = False
     minDist = 0
     maxIndex = 0
     if '-d' in argv:
@@ -138,15 +122,21 @@ def main():
         maxDist = 30000
     else:
         minDist, maxDist = initialize()
+    err = 50
+    if '-e' in argv:
+        err = int(raw_input("Please enter an error threshold"))
     print str(minDist)+' '+str(maxDist)
     raw_input()
     stepLength = maxDist-minDist
+    scaleFactor = 220.0/stepLength
     stepLength/=8
     note = 'c'
     
     last = -1
     otherLast = -1
-    first = None 
+    first = None
+    wav.out()
+    stopped = False
     #main loop
     while True:
         _, orgframe = cap.read()
@@ -171,23 +161,27 @@ def main():
         #Setting frequency based off of distance
         if abs(curr-last)>10:
             f = curr - minDist
-            f/=stepLength
-            f = int(f)
-            f%=8
-            if curr>maxDist:
-                f = 7
-            if curr<minDist:
-                f = 0
-            keys = notes.keys()
-            keys.sort()
-            note = keys[f]
+            if contScale: 
+                f = 220+scaleFactor*f
+                note = str(f)+'Hz'
+            else:
+                f/=stepLength
+                f = int(f)
+                f%=8
+                if curr>maxDist:
+                    f = 7
+                if curr<minDist:
+                    f = 0
+                keys = notes.keys()
+                keys.sort()
+                note = keys[f]
+                f = notes[note]
             cmd('cls')
-            #print str(curr)+' '+str(f)+' '+note
-            f = 2*Pi*notes[note]
-            if numcnts>50:
+            if numcnts>err:
                 f = 0
                 note = " "
             print 'current note: '+note
+            f = 2*Pi*f
             oldFreq = wav.freq
             while abs(oldFreq-f)>1:
                 oldFreq = (oldFreq+f)/2 
@@ -213,13 +207,22 @@ def main():
         k = cv2.waitKey(30)
         if k==ord('q'):
             return
+        elif k==ord('c'):
+            contScale = not contScale 
+        elif k==ord('m'):
+            if stopped:
+                wav.out()
+                stopped = False
+            else:
+                wav.stop()
+                stopped = True
 if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
         pass
-    out.stop()
-    otherOut.stop()
+    wav.stop()
+    #otherOut.stop()
     s.stop()
     exit()
  
