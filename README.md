@@ -3,7 +3,7 @@ A theremin controlled by your webcam
 
 -Try to not be in the camera's field of view when it start's detection, although it shouldn't be a problem unless your hand is in the range actually used by the camera
 
--Video Demo <a href="https://www.youtube.com/watch?v=HO9WqtaXeNo">here</a>
+-Video Demo <a href="https://www.youtube.com/watch?v=1kbN_tl2IlU">here</a>
 
 -Run with the flag '-d' to use some preset values for detection instead of calibrating 
 
