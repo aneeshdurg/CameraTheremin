@@ -25,5 +25,6 @@ class Slider:
             x, y, w, h = cv2.boundingRect(hand)
             if len(cnts)<Self.err:
                 cv2.line(orgframe, (0, y),(400, y), (0, 255, 0), 2)
+        cv2.line(orgframe, (0, 150), (400, 150), (0, 0, 255), 2)
         cv2.imshow('f', orgframe)
         return len(cnts), y, x+w
