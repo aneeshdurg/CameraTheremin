@@ -26,4 +26,4 @@ class Slider:
             if len(cnts)<Self.err:
                 cv2.line(orgframe, (0, y),(400, y), (0, 255, 0), 2)
         cv2.imshow('f', orgframe)
-        return len(cnts), y
+        return len(cnts), y, x+w
