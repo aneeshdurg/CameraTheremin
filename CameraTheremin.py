@@ -4,6 +4,7 @@ from pyo import Server, SquareTable, SineLoop, Osc
 from math import pi as Pi
 from sys import argv
 from os import system as cmd
+from slider import Slider
 
 cmd('cls')
 
@@ -125,6 +126,8 @@ def main():
     last = -1
     first = None
 
+    pitchSlider = Slider(err, minDist) 
+
     wav.out()
     stopped = False
     #main loop
@@ -145,7 +148,8 @@ def main():
         #cropping frame for more accurate detection
         frame = cframe[100:300, 100:300]
         thresh, curr, numcnts = getVal(frame)
-    
+        pitchframe = cframe[100:500, 500:1000]
+        pnumcnts, pitchBend = pitchSlider.getVal(pitchframe) 
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
         #dictionary. Continuous mode maps the frequency to the range
@@ -155,6 +159,7 @@ def main():
             if contScale: 
                 f = 220+scaleFactor*f
                 note = str(f)+'Hz'
+                pitchBend = 0
             else:
                 f/=stepLength
                 f = int(f)
@@ -165,13 +170,35 @@ def main():
                     f = 0
                 keys = notes.keys()
                 keys.sort()
+                temp = f
                 note = keys[f]
                 f = notes[note]
+                if pnumcnts<err and pitchBend!=0:
+                    if pitchBend<150:
+                        upper = 0
+                        if temp+1>7:
+                            upper = 100
+                        else:
+                            upper = keys[temp+1] 
+                            upper = notes[upper]
+                        upper = upper - f
+                        pitchBend  = upper - pitchBend*(upper/150)
+                    else:
+                        lower = 0
+                        if temp-1<0:
+                            lower = 100
+                        else:
+                            lower = keys[temp-1] 
+                            lower = notes[lower]
+                        lower = f - lower
+                        pitchBend = -1*(pitchBend-150)*(lower/150)
+                    f+=pitchBend
             cmd('cls')
             if numcnts>err or curr<minDist/2:
                 f = 0
                 note = " "
             print 'current note: '+note
+            print 'pitch bend: '+str(pitchBend)
             f = 2*Pi*f
             oldFreq = wav.freq
             if oldFreq!=0:
