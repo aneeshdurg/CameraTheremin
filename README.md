@@ -3,7 +3,7 @@ A theremin controlled by your webcam
 
 -Try to not be in the camera's field of view when it start's detection, although it shouldn't be a problem unless your hand is in the range actually used by the camera
 
--Video Demo <a href="https://www.youtube.com/watch?v=1kbN_tl2IlU">here</a>
+-Video Demos: <a href="https://www.youtube.com/watch?v=1kbN_tl2IlU">main theremin demo</a>, and <a href="https://www.youtube.com/watch?v=nVjc5MPW474">pitch bend demo</a> 
 
 -Run with the flag '-d' to use some preset values for detection instead of calibrating 
 
@@ -19,7 +19,7 @@ Controls:
 	
 		in discrete mode this changes the note on a scale from A3 to A4
 			
-			in discrete mode, moving your other hand on the vertical slider allows you bend the pitch
+			in discrete mode, moving your other hand on the vertical slider allows you bend the pitch 
 
 	'q' to quit
 
