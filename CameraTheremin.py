@@ -151,7 +151,7 @@ def main():
         thresh, curr, numcnts = getVal(frame)
         pitchframe = cframe[100:500, 500:1000]
         
-        pnumcnts, pitchBend = pitchSlider.getVal(pitchframe, orgpframe) 
+        pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe) 
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
         #dictionary. Continuous mode maps the frequency to the range
