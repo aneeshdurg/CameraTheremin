@@ -25,4 +25,6 @@ Controls:
 
 	'c' to switch between continuous and discrete mode
 
-	'm' to mute 
+	'p' to toggle pitch bend in discrete mode
+
+	'm' to toggle mute 

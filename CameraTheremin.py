@@ -130,6 +130,7 @@ def main():
 
     wav.out()
     stopped = False
+    pitchBendEnable = True
     #main loop
     while True:
         _, orgframe = cap.read()
@@ -175,7 +176,7 @@ def main():
                 temp = f
                 note = keys[f]
                 f = notes[note]
-                if pnumcnts<err and pitchBend!=0:
+                if pitchBendEnable and pnumcnts<err and pitchBend!=0:
                     if pitchBend<150:
                         upper = 0
                         if temp+1>7:
@@ -195,6 +196,8 @@ def main():
                         lower = f - lower
                         pitchBend = -1*(pitchBend-150)*(lower/150)
                     f+=pitchBend
+                else:
+                    pitchBend = 0
             cmd('cls')
             if numcnts>err or curr<minDist/2:
                 f = 0
@@ -231,6 +234,8 @@ def main():
             else:
                 wav.stop()
                 stopped = True
+        elif k==ord('p'):
+            pitchBendEnable = not pitchBendEnable
 
 if __name__ == "__main__":
     #Pyo server/objects
