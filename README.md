@@ -18,6 +18,8 @@ Controls:
 		in continuous mode this changes the frequency of the note being played continuously
 	
 		in discrete mode this changes the note on a scale from A3 to A4
+			
+			in discrete mode, moving your other hand on the vertical slider allows you bend the pitch
 
 	'q' to quit
 
