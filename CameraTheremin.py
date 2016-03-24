@@ -2,11 +2,18 @@ import cv2
 import numpy as np
 from pyo import Server, SquareTable, SineLoop, Osc
 from math import pi as Pi
-from sys import argv
+from sys import argv, platform
 from os import system as cmd
 from slider import Slider
 
-cmd('cls')
+def cls():
+    if platform=='win32':
+        cmd('cls')
+    else:
+        cmd('clear')
+
+
+cls()
 
 #camera
 cap = cv2.VideoCapture(0)
@@ -43,7 +50,7 @@ def initialize():
     done = False
     first = None
     while not done:
-        cmd('cls')
+        cls()
         actualcounter+=1
         print actualcounter
         _, frame = cap.read()
@@ -75,7 +82,7 @@ def initialize():
     done = False
     first = None
     while not done:
-        cmd('cls')
+        cls()
         actualcounter+=1
         print actualcounter
         _, frame = cap.read()
@@ -198,7 +205,7 @@ def main():
                     f+=pitchBend
                 else:
                     pitchBend = 0
-            cmd('cls')
+            cls()
             if numcnts>err or curr<minDist/2:
                 f = 0
                 note = " "
