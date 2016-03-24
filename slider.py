@@ -4,7 +4,7 @@ class Slider:
     def __init__(Self, err, minDist):
         Self.minDist = minDist
         Self.err = err
-    def getVal(Self, frame):
+    def getVal(Self, frame, orgframe):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blur = cv2.GaussianBlur(gray, (9, 9), 0)
         _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
@@ -24,6 +24,6 @@ class Slider:
         if (cv2.contourArea(hand)>Self.minDist):
             x, y, w, h = cv2.boundingRect(hand)
             if len(cnts)<Self.err:
-                cv2.line(frame, (0, y),(400, y), (0, 255, 0), 2)
-        cv2.imshow('f', frame)
+                cv2.line(orgframe, (0, y),(400, y), (0, 255, 0), 2)
+        cv2.imshow('f', orgframe)
         return len(cnts), y

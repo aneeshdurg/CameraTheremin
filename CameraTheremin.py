@@ -135,6 +135,7 @@ def main():
         _, orgframe = cap.read()
         cframe = cv2.flip(orgframe, 1)
         orgframe = cv2.flip(orgframe, 1)
+        orgpframe = orgframe[100:500, 500:1000]
         orgframe = orgframe[100:300, 100:300]#500]
     
         #background subtraction assuming mostly static background
@@ -149,7 +150,8 @@ def main():
         frame = cframe[100:300, 100:300]
         thresh, curr, numcnts = getVal(frame)
         pitchframe = cframe[100:500, 500:1000]
-        pnumcnts, pitchBend = pitchSlider.getVal(pitchframe) 
+        
+        pnumcnts, pitchBend = pitchSlider.getVal(pitchframe, orgpframe) 
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
         #dictionary. Continuous mode maps the frequency to the range
