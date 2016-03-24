@@ -5,6 +5,8 @@ from math import pi as Pi
 from sys import argv
 from os import system as cmd
 
+cmd('cls')
+
 #camera
 cap = cv2.VideoCapture(0)
 
