@@ -25,6 +25,8 @@ Requires OpenCV, pyo
 				
 				in discrete mode, moving your other hand on the vertical slider allows you bend the pitch 
 
+			moving your hand in the region dedicated to amp control will change the amplitude if your hand is still for 5s or more
+
 	Keyboard Controls (requires focus to be on either one of the video output windows):
 	
 		'q' to quit
@@ -32,5 +34,7 @@ Requires OpenCV, pyo
 		'c' to switch between continuous and discrete mode
 
 		'p' to toggle pitch bend in discrete mode
+
+		'v' to toggle amplitude control
 
 		'm' to toggle mute 
