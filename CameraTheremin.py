@@ -5,6 +5,7 @@ from math import pi as Pi
 from sys import argv, platform
 from os import system as cmd
 from slider import Slider
+from time import time
 
 def cls():
     if platform=='win32':
@@ -133,7 +134,14 @@ def main():
     last = -1
     first = None
 
-    pitchSlider = Slider(err, minDist) 
+    pitchSlider = Slider(err, minDist, True, False, 150, 0, "pitch") 
+    volSlider = Slider(err, minDist, False, True, 0, 0, "vol")
+
+    lastVolume = 1.0
+    timing = False
+    vstartTime = 0
+    vstart = 0
+    vcontrolenabled = True
 
     wav.out()
     stopped = False
@@ -144,6 +152,7 @@ def main():
         cframe = cv2.flip(orgframe, 1)
         orgframe = cv2.flip(orgframe, 1)
         orgpframe = orgframe[100:400, 500:900]
+        orgvframe = orgframe[0:100, 300:500]
         orgframe = orgframe[100:300, 100:300]#500]
     
         #background subtraction assuming mostly static background
@@ -158,8 +167,29 @@ def main():
         frame = cframe[100:300, 100:300]
         thresh, curr, numcnts = getVal(frame)
         pitchframe = cframe[100:400, 500:900]
-        
-        pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe) 
+        volframe = cframe[0:100, 300:500] 
+
+        pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe)
+        vthresh, vcurr, vnumcnts = getVal(volframe)
+        cv2.imshow('vthresh', vthresh)
+        estimate = int(lastVolume)
+        if vcontrolenabled and vnumcnts<err:
+            if timing:
+                if abs(vstart-vcurr)>500:
+                    timing = False
+                else:
+                    if time()-vstartTime>=2 and vcurr>=minDist/2:
+                        timing = False
+                        lastVolume = 10*(vcurr-(minDist/2))/(maxDist/2)
+                    estimate = int(10*(vcurr-(minDist/2))/(maxDist/2)) 
+            else:
+                timing = True
+                vstartTime = time()
+                vstart = vcurr
+        else:
+            timing = False
+
+        s.setAmp(lastVolume)
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
         #dictionary. Continuous mode maps the frequency to the range
@@ -211,6 +241,10 @@ def main():
                 note = " "
             print 'current note: '+note
             print 'pitch bend: '+str(pitchBend)
+            print 'amp: '+str(lastVolume)
+            print 'changing amp: '+str(timing)
+            if timing:
+                print 'projected new amp: '+str(estimate)
             f = 2*Pi*f
             oldFreq = wav.freq
             if oldFreq!=0:
@@ -243,6 +277,8 @@ def main():
                 stopped = True
         elif k==ord('p'):
             pitchBendEnable = not pitchBendEnable
+        elif k==ord('v'):
+            vcontrolenabled = not vcontrolenabled
 
 if __name__ == "__main__":
     #Pyo server/objects
