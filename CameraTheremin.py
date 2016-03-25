@@ -242,7 +242,7 @@ def main():
             print 'current note: '+note
             print 'pitch bend: '+str(pitchBend)
             print 'amp: '+str(lastVolume)
-            print 'changing amp: '+str(timing)
+            print 'changing amp: '+str(timing)+' time remaining: '+str(5-time()+vstartTime)
             if timing:
                 print 'projected new amp: '+str(estimate)
             f = 2*Pi*f
