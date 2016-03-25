@@ -59,7 +59,7 @@ def initialize():
         if first == None:
             first = frame
             continue
-        elif actualcounter == 200:
+        elif actualcounter == 100:
             first = frame
         else:
            frame = cv2.absdiff(first, frame)
@@ -70,11 +70,11 @@ def initialize():
         if minDist == -1:
             minDist = val
         else:
-            if actualcounter<200:
+            if actualcounter<100:
                 continue
             minDist = (minDist*counter+val)/(counter+1)
         counter+=1
-        if counter==200:
+        if counter==100:
             done = True
     
     actualcounter = 0
@@ -91,7 +91,7 @@ def initialize():
         if first == None:
             first = frame
             continue
-        elif actualcounter == 200:
+        elif actualcounter == 100:
             first = frame
         else:
            frame = cv2.absdiff(first, frame)
@@ -102,11 +102,11 @@ def initialize():
         if maxDist == -1:
             maxDist = val
         else:
-            if actualcounter<200:
+            if actualcounter<100:
                 continue
             maxDist = (maxDist*counter+val)/(counter+1)
         counter+=1
-        if counter==200:
+        if counter==100:
             done = True
     cv2.destroyAllWindows()
     return minDist, maxDist
