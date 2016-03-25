@@ -187,7 +187,7 @@ def main():
                     if pitchBend<150:
                         upper = 0
                         if temp+1>7:
-                            upper = 100
+                            upper = f+100
                         else:
                             upper = keys[temp+1] 
                             upper = notes[upper]
@@ -196,7 +196,7 @@ def main():
                     else:
                         lower = 0
                         if temp-1<0:
-                            lower = 100
+                            lower = f-100
                         else:
                             lower = keys[temp-1] 
                             lower = notes[lower]
