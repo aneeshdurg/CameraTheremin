@@ -53,7 +53,12 @@ def initialize():
     while not done:
         cls()
         actualcounter+=1
-        print actualcounter
+        formatting =(10*actualcounter/200)+1 
+        if actualcounter<100:
+            print 'Place hand away from camera'
+        else:
+            print 'Please remove hand'
+        print '['+'='*formatting+' '*(10-formatting)+']'
         _, frame = cap.read()
         frame = cv2.flip(frame, 1)
         frame = frame[100:300, 100:300] 
@@ -85,7 +90,12 @@ def initialize():
     while not done:
         cls()
         actualcounter+=1
-        print actualcounter
+        formatting =(10*actualcounter/200)+1 
+        if actualcounter<100:
+            print 'Place hand close to camera'
+        else:
+            print 'Please remove hand'
+        print '['+'='*formatting+' '*(10-formatting)+']'
         _, frame = cap.read()
         frame = cv2.flip(frame, 1)
         frame = frame[100:300, 100:300] 
