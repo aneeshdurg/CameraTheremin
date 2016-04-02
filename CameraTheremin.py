@@ -4,8 +4,11 @@ from pyo import Server, SquareTable, SineLoop, Osc
 from math import pi as Pi
 from sys import argv, platform
 from os import system as cmd
-from slider import Slider
 from time import time
+from sys import path 
+path.append('detection')
+from slider import Slider
+from proximity import proximitySensor
 
 def cls():
     if platform=='win32':
@@ -24,105 +27,10 @@ show = False
 if "-v" in argv:
     show = True
 
-#"depth" detection
-def getVal(frame):
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    blur = cv2.GaussianBlur(gray, (9, 9), 0)
-    _, thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    #thresh = cv2.bitwise_not(thresh)
-    cnts, _ = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    maxArea = 0
-    maxIndex = -1
-    for i in xrange(len(cnts)):
-        area = cv2.contourArea(cnts[i])
-        if area>maxArea:
-            maxArea = area
-            maxIndex = i
-    hand = cnts[maxIndex]
-    handLen = cv2.arcLength(hand, True)
-    handCnt = cv2.approxPolyDP(hand, 0.0001*handLen, True)    
-    return thresh, cv2.contourArea(handCnt), len(cnts)
 
-def initialize():
-    minDist = -1
-    maxDist = -1
-    counter = 0
-    actualcounter = 0
-    done = False
-    first = None
-    while not done:
-        cls()
-        actualcounter+=1
-        formatting =(10*actualcounter/200)+1 
-        if actualcounter<100:
-            print 'Place hand away from camera'
-        else:
-            print 'Please remove hand'
-        print '['+'='*formatting+' '*(10-formatting)+']'
-        _, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        frame = frame[100:300, 100:300] 
-        if first == None:
-            first = frame
-            continue
-        elif actualcounter == 100:
-            first = frame
-        else:
-           frame = cv2.absdiff(first, frame)
-           cv2.imshow('abs', frame)
-           cv2.waitKey(30)
-        thresh, val, something= getVal(frame)
-        cv2.imshow('minPos', thresh)
-        if minDist == -1:
-            minDist = val
-        else:
-            if actualcounter<100:
-                continue
-            minDist = (minDist*counter+val)/(counter+1)
-        counter+=1
-        if counter==100:
-            done = True
-    
-    actualcounter = 0
-    counter = 0
-    done = False
-    first = None
-    while not done:
-        cls()
-        actualcounter+=1
-        formatting =(10*actualcounter/200)+1 
-        if actualcounter<100:
-            print 'Place hand close to camera'
-        else:
-            print 'Please remove hand'
-        print '['+'='*formatting+' '*(10-formatting)+']'
-        _, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-        frame = frame[100:300, 100:300] 
-        if first == None:
-            first = frame
-            continue
-        elif actualcounter == 100:
-            first = frame
-        else:
-           frame = cv2.absdiff(first, frame)
-           cv2.imshow('abs', frame)
-           cv2.waitKey(30)
-        thresh, val, something = getVal(frame)
-        cv2.imshow('maxPos', thresh)
-        if maxDist == -1:
-            maxDist = val
-        else:
-            if actualcounter<100:
-                continue
-            maxDist = (maxDist*counter+val)/(counter+1)
-        counter+=1
-        if counter==100:
-            done = True
-    cv2.destroyAllWindows()
-    return minDist, maxDist
 
 def main():
+    proxSensor = proximitySensor() 
     contScale = False
     minDist = 0
     maxIndex = 0
@@ -130,7 +38,7 @@ def main():
         minDist = 5000
         maxDist = 30000
     else:
-        minDist, maxDist = initialize()
+        minDist, maxDist = proxSensor.initialize()
     err = 50
     if '-e' in argv:
         err = int(raw_input("Please enter an error threshold"))
@@ -145,7 +53,6 @@ def main():
     first = None
 
     pitchSlider = Slider(err, minDist, True, False, 150, 0, "pitch") 
-    volSlider = Slider(err, minDist, False, True, 0, 0, "vol")
 
     lastVolume = 1.0
     timing = False
@@ -158,29 +65,19 @@ def main():
     pitchBendEnable = True
     #main loop
     while True:
-        _, orgframe = cap.read()
-        cframe = cv2.flip(orgframe, 1)
-        orgframe = cv2.flip(orgframe, 1)
+        ret, orgframe, cframe = proxSensor.setFrame(show)
+        if not ret:
+            continue
         orgpframe = orgframe[100:400, 500:900]
         orgvframe = orgframe[0:100, 300:500]
         orgframe = orgframe[100:300, 100:300]#500]
-    
-        #background subtraction assuming mostly static background
-        if first == None:
-            first = cframe
-            continue
-        else:
-            cframe = cv2.absdiff(first, cframe)
-        if show:
-            cv2.imshow('abs', cframe)
+        
         #cropping frame for more accurate detection
-        frame = cframe[100:300, 100:300]
-        thresh, curr, numcnts = getVal(frame)
-        pitchframe = cframe[100:400, 500:900]
-        volframe = cframe[0:100, 300:500] 
+        thresh, curr, numcnts = proxSensor.getValcropped(100, 300, 100, 300)
 
+        pitchframe = cframe[100:400, 500:900]
         pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe)
-        vthresh, vcurr, vnumcnts = getVal(volframe)
+        vthresh, vcurr, vnumcnts = proxSensor.getValcropped(0, 100, 300, 500)
         cv2.imshow('vthresh', vthresh)
         estimate = int(lastVolume)
         if vcontrolenabled and vnumcnts<err:
@@ -312,5 +209,7 @@ if __name__ == "__main__":
     wav.stop()
     #otherOut.stop()
     s.stop()
+    cls()
+    print "Stopped theremin"
     exit()
  
