@@ -37,4 +37,10 @@ Requires OpenCV, pyo
 
 		'v' to toggle amplitude control
 
+		'[' to decrese amplitude if amplitude control disabled
+
+		']' to increase amplitude if amplitude control disabled
+
+		'\' to convert current amplitude to an integer
+
 		'm' to toggle mute 

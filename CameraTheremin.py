@@ -10,24 +10,12 @@ path.append('detection')
 from slider import Slider
 from proximity import proximitySensor
 
+#cross platform clear function
 def cls():
     if platform=='win32':
         cmd('cls')
     else:
         cmd('clear')
-
-
-cls()
-
-#camera
-cap = cv2.VideoCapture(0)
-
-#useful for debugging
-show = False
-if "-v" in argv:
-    show = True
-
-
 
 def main():
     proxSensor = proximitySensor() 
@@ -68,17 +56,19 @@ def main():
         ret, orgframe, cframe = proxSensor.setFrame(show)
         if not ret:
             continue
+
+        #frames for displaying
         orgpframe = orgframe[100:400, 500:900]
         orgvframe = orgframe[0:100, 300:500]
-        orgframe = orgframe[100:300, 100:300]#500]
+        orgframe = orgframe[100:300, 100:300]
         
         #cropping frame for more accurate detection
         thresh, curr, numcnts = proxSensor.getValcropped(100, 300, 100, 300)
-
+        vthresh, vcurr, vnumcnts = proxSensor.getValcropped(0, 100, 300, 500)
         pitchframe = cframe[100:400, 500:900]
         pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe)
-        vthresh, vcurr, vnumcnts = proxSensor.getValcropped(0, 100, 300, 500)
         cv2.imshow('vthresh', vthresh)
+        
         estimate = int(lastVolume)
         if vcontrolenabled and vnumcnts<err:
             if timing:
@@ -95,7 +85,6 @@ def main():
                 vstart = vcurr
         else:
             timing = False
-
         s.setAmp(lastVolume)
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
@@ -186,8 +175,25 @@ def main():
             pitchBendEnable = not pitchBendEnable
         elif k==ord('v'):
             vcontrolenabled = not vcontrolenabled
+        elif k==ord(']') and not vcontrolenabled:
+            lastVolume += 0.5
+        elif k==ord('[') and not vcontrolenabled:
+            lastVolume -= 0.5
+        elif k==ord('\\'):
+            lastVolume = int(lastVolume)
 
 if __name__ == "__main__":
+    
+    cls()
+
+    #camera
+    cap = cv2.VideoCapture(0)
+    
+    #useful for debugging
+    show = False
+    if "-v" in argv:
+        show = True
+    
     #Pyo server/objects
     s = Server().boot()
     s.start()
