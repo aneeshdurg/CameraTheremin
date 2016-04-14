@@ -1,6 +1,27 @@
 # CameraTheremin
 A theremin controlled by your webcam
 
+#JS/getUserMedia+Tone.js
+
+Works on browsers that support getUserMedia
+
+https://aneeshdurg.github.io/CameraTheremin
+
+To use first press start theremin.
+
+then press thresh+ until you can clearly see your sillouette
+
+Then use xs/xe/ys/ye to crop the image to the region in which you want to move your hand
+
+While holding your hand away from the camera, press set min to set the position for low frequencies
+
+While holding your hand close to the camera, press set max to set the position for high frequencies
+
+Press calibrate to display the original webcam input and enjoy the sounds!
+
+(there are other settings which can improve the detection, use them as needed)
+
+#Python/openCV
 Requires OpenCV, pyo
 
 -Try to not be in the camera's field of view when it start's detection, although it shouldn't be a problem unless your hand is in the range actually used by the camera
