@@ -84,7 +84,7 @@ function draw(){
 }
 
 function scale(num){
-	if(min<0||max<0)
+	if(min<0||max<0||num==0)
 		return num;
 	var high = max-min;
 	var sf = 220/high;
