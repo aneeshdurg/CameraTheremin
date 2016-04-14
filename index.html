@@ -7,6 +7,7 @@
 		<script src="script.js"></script>
 		<script>
 var started = false;
+var playing = false;
 function start(){
 	started = !started;
 	dogaussblur = !dogaussblur;
@@ -19,6 +20,17 @@ function start(){
 		document.getElementById("strt").innerHTML = "Start theremin";
 }
 function playSynth(freq){
+	if(!playing&&freq>=300){
+		var synth = new Tone.SimpleSynth().toMaster();
+		console.log("test");
+		var loop = new Tone.Loop(function(time){
+			synth.triggerAttackRelease("C2", "8n", time);
+		}, "4n");
+	
+		loop.start("1m").stop("4m");
+		Tone.Transport.start();
+		playing = true;
+	}	
 }
 		</script>
 	</head>

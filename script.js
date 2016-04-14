@@ -3,14 +3,22 @@ function initialize(){
 	canvas = document.getElementById("c");
 	context = canvas.getContext("2d");
 
-	width = 640;
-	height = 480; 
+	width = 320;//640;
+	height = 240;//480; 
 	canvas.width = width;
 	canvas.height = height;
 	xe = width;
 	ye = height;
 
-	navigator.getUserMedia({video:true}, startStream, function(){});
+	var constraints = {
+		video: {
+			mandatory: {
+				maxWidth: 320,
+				maxHeight: 180
+			}
+		}
+	}
+	navigator.getUserMedia(constraints, startStream, function(){});
 }
 
 function startStream(stream){
@@ -80,7 +88,9 @@ function scale(num){
 		return num;
 	var high = max-min;
 	var sf = 220/high;
-	var ret = Math.floor(sf*(num-min)+220);
+	var ret = (sf*(num-min)+220)*1000;
+	var ret = Math.floor(ret);
+	var ret = ret/1000;
 	playSynth(ret);
 	return ret;
 }
