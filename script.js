@@ -65,7 +65,7 @@ function draw(){
 					document.getElementById("minval").innerHTML = white;
 				}
 
-				var scaled = scale(white); 
+				var scaled = scale(white, cont); 
 				document.getElementById("count").innerHTML = scaled;
 				//flip(frame.data);
 			}
@@ -83,14 +83,36 @@ function draw(){
 	requestAnimationFrame(draw);
 }
 
-function scale(num){
-	if(min<0||max<0||num==0)
+function scale(num, mode){
+	if(min<0||max<0||num==0){
+		playSynth(0);
 		return num;
+	}
 	var high = max-min;
 	var sf = 220/high;
 	var ret = (sf*(num-min)+220)*1000;
 	var ret = Math.floor(ret);
 	var ret = ret/1000;
+	if(mode){
+		if(ret<=150)
+			ret=0;
+		else if(ret<=233.082)
+			ret=220;
+		else if(ret<=(246.942+133.082)/2)
+			ret = 246.942;
+		else if(ret<=277.183)
+			ret = 261.626;
+		else if(ret<=311.127)
+			ret = 293.665;
+		else if(ret<=(349.228+329.628)/2)
+			ret = 329.628;
+		else if(ret<=369.994)
+			ret = 349.228;
+		else if(ret<=415.305)
+			ret = 391.995;
+		else
+			ret = 440;
+	}	
 	playSynth(ret);
 	return ret;
 }

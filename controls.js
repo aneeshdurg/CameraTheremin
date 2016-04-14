@@ -18,11 +18,20 @@ var min = -1;
 var max = -1;
 var changemin = false;
 var changemax = false;
+var cont = true;
 
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||
                        navigator.msGetUserMedia);
+function setcont(){
+	cont = !cont;
+	if(cont)
+		document.getElementById("cbutton").innerHTML = "continuous";
+	else
+		document.getElementById("cbutton").innerHTML = "discrete";	
+}
+
 function setmin(val){
 	changemin = true;
 }
