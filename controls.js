@@ -90,10 +90,10 @@ function yedelta(incr){
 
 function threshup(incr){
 	if(incr){
-		t++;
+		t+=5;
 	}
 	else{
-		t--;
+		t-=5;
 	}
 }
 

@@ -8,7 +8,15 @@
 		<script>
 var started = false;
 var playing = false;
+var synth = new Tone.SimpleSynth().toMaster();
+var oldfreq = -1;
 function start(){
+	if(!started){
+		synth.triggerAttack(0);	
+	}
+	else{
+		synth.triggetRelease();
+	}
 	started = !started;
 	dogaussblur = !dogaussblur;
 	//dobinsub = !dobinsub;
@@ -20,17 +28,10 @@ function start(){
 		document.getElementById("strt").innerHTML = "Start theremin";
 }
 function playSynth(freq){
-	if(!playing&&freq>=300){
-		var synth = new Tone.SimpleSynth().toMaster();
-		console.log("test");
-		var loop = new Tone.Loop(function(time){
-			synth.triggerAttackRelease("C2", "8n", time);
-		}, "4n");
-	
-		loop.start("1m").stop("4m");
-		Tone.Transport.start();
-		playing = true;
-	}	
+	if(freq>0){
+		synth.setNote(freq);
+	}
+	oldfreq = freq;
 }
 		</script>
 	</head>
