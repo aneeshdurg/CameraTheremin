@@ -1,5 +1,3 @@
-
-
 function initialize(){
 	video = document.getElementById("vid");
 	canvas = document.getElementById("c");
@@ -68,7 +66,9 @@ function draw(){
 					changemin = false;
 					document.getElementById("minval").innerHTML = white;
 				}
-				document.getElementById("count").innerHTML = white;
+
+				var scaled = scale(white); 
+				document.getElementById("count").innerHTML = scaled;
 				//flip(frame.data);
 			}
 		}
@@ -83,6 +83,16 @@ function draw(){
 		color%=3;
 	}
 	requestAnimationFrame(draw);
+}
+
+function scale(num){
+	if(min<0||max<0)
+		return num;
+	var high = max-min;
+	var sf = 220/high;
+	var ret = sf*(num-min)+220;
+	playSynth(ret);
+	return ret;
 }
 
 function readFrame(){
@@ -151,14 +161,14 @@ function binsub(data, thresh){
 				}
 		}
 		if(replace){
-			data[j] = 0;
-			data[j+1] = 0;
-			data[j+2] = 0;
-		}
-		else{
 			data[j] = 255;
 			data[j+1] = 255;
 			data[j+2] = 255;
+		}
+		else{
+			data[j] = 0;
+			data[j+1] = 0;
+			data[j+2] = 0;
 	
 		}
 	

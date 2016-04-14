@@ -20,8 +20,8 @@ var dothresh = false;
 var calibrate = true;
 var t = 0;
 var noiseThresh = 0;
-var min = 0;
-var max = 0;
+var min = -1;
+var max = -1;
 var changemin = false;
 var changemax = false;
 
