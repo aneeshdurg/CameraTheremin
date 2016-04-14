@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>getUserMedia() fun</title>
+		<script src="controls.js"></script>
+		<script src="script.js"></script>
+		<script> 
+function start(){
+	dogaussblur = !dogaussblur;
+	//dobinsub = !dobinsub;
+	dothresh = !dothresh;
+	docrop = !docrop;	
+}
+		</script>
+	</head>
+
+	<body>
+		<video id="vid" hidden></video>
+		<canvas id="c"></canvas>
+		<p id="action" hidden>none</p>
+		<br>
+		<button onclick="start()">Start theremin</button>
+		<button onclick="setcalibrate()">calibrate</button>
+		<br>
+		<div id="calibration">
+		<button onclick="threshup(true)">thresh+</button>
+		<button onclick="threshup(false)">thresh-</button>			
+		<br>
+		<button onclick="xsdelta(true)">xs+</button>
+		<button onclick="xsdelta(false)">xs-</button>
+		<button onclick="xedelta(true)">xe+</button>
+		<button onclick="xedelta(false)">xe-</button>
+		<button onclick="ysdelta(true)">ys+</button>
+		<button onclick="ysdelta(false)">ys-</button>
+		<button onclick="yedelta(true)">ye+</button>
+		<button onclick="yedelta(false)">ye-</button>
+		<br>
+		<button onclick="nthreshdelta(true)">+</button>
+		<button onclick="nthreshdelta(false)">-</button>
+		<br>
+		<button onclick="setbinsub()">binsub</button>
+		<button onclick="stUp()">st+</button>
+		<button onclick="stdn()">st-</button>
+		<br>
+		<button onclick="setmax()">set max</button>
+		<button onclick="setmin()">set mi</button>
+		<br>
+		<p id="subThresh">subtractor threshold = 10</p>
+		<p id="maxval"></p>
+		<p id="minval"></p>
+		</div>
+		<br hidden>
+		<p id="count"></p>
+

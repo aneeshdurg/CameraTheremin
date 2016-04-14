@@ -69,6 +69,7 @@ def main():
         pnumcnts, pitchBend, _ = pitchSlider.getVal(pitchframe, orgpframe)
         cv2.imshow('vthresh', vthresh)
         
+        #changes amplitude when the object in the detection zone is still
         estimate = int(lastVolume)
         if vcontrolenabled and vnumcnts<err:
             if timing:
@@ -86,6 +87,7 @@ def main():
         else:
             timing = False
         s.setAmp(lastVolume)
+
         #Setting frequency based off of distance
         #normal mode sets frequency to one of the frequencies in the 
         #dictionary. Continuous mode maps the frequency to the range
@@ -109,6 +111,8 @@ def main():
                 temp = f
                 note = keys[f]
                 f = notes[note]
+
+                #pitchbend
                 if pitchBendEnable and pnumcnts<err and pitchBend!=0:
                     if pitchBend<150:
                         upper = 0
@@ -131,16 +135,21 @@ def main():
                     f+=pitchBend
                 else:
                     pitchBend = 0
-            cls()
+
+            #invalid detection 
             if numcnts>err or curr<minDist/2:
                 f = 0
                 note = " "
+
+            cls()
             print 'current note: '+note
             print 'pitch bend: '+str(pitchBend)
             print 'amp: '+str(lastVolume)
             print 'changing amp: '+str(timing)+' time remaining: '+str(5-time()+vstartTime)
             if timing:
                 print 'projected new amp: '+str(estimate)
+            
+            #change frequencies incrementally
             f = 2*Pi*f
             oldFreq = wav.freq
             if oldFreq!=0:
@@ -160,6 +169,8 @@ def main():
         
         cv2.imshow("Theremin", orgframe)
         k = cv2.waitKey(30)
+        
+        #keyboard controls
         if k==ord('q'):
             return
         elif k==ord('c'):
