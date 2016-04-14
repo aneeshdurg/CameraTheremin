@@ -73,7 +73,11 @@ function draw(){
 			}
 		}
 		if(calibrate){
-			context.putImageData(frame, 0, 0);
+			try{
+				context.putImageData(frame, 0, 0);
+			} catch(e){
+				console.log(e);
+			}
 		
 		}
 	}
@@ -90,7 +94,7 @@ function scale(num){
 		return num;
 	var high = max-min;
 	var sf = 220/high;
-	var ret = sf*(num-min)+220;
+	var ret = Math.floor(sf*(num-min)+220);
 	playSynth(ret);
 	return ret;
 }
