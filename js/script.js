@@ -1,18 +1,24 @@
-
-
 function initialize(){
 	video = document.getElementById("vid");
 	canvas = document.getElementById("c");
 	context = canvas.getContext("2d");
 
-	width = 640;
-	height = 480; 
+	width = 320;//640;
+	height = 240;//480; 
 	canvas.width = width;
 	canvas.height = height;
 	xe = width;
 	ye = height;
 
-	navigator.getUserMedia({video:true}, startStream, function(){});
+	var constraints = {
+		video: {
+			mandatory: {
+				maxWidth: 320,
+				maxHeight: 180
+			}
+		}
+	}
+	navigator.getUserMedia(constraints, startStream, function(){});
 }
 
 function startStream(stream){
@@ -24,22 +30,12 @@ function startStream(stream){
 
 function draw(){
 	var frame = readFrame();
-	var fcopy = frame;
 	if(frame){
 		if(counter>=100){
-			if(!initialf){
+			if(binsub&&!initialf){
 				initialf = frame.data;
 			}
 			else{
-				if(dobsub){
-					bsub(frame.data);
-				}
-				if(dobsub2){
-					bsub2(frame.data, subThresh);
-				}
-				if(doincreaseRed){
-					increaseRed(frame.data, color);
-				}
 				if(dobinsub){
 					binsub(frame.data, subThresh);
 				}
@@ -68,21 +64,35 @@ function draw(){
 					changemin = false;
 					document.getElementById("minval").innerHTML = white;
 				}
-				document.getElementById("count").innerHTML = white;
+
+				var scaled = scale(white); 
+				document.getElementById("count").innerHTML = scaled;
 				//flip(frame.data);
 			}
 		}
 		if(calibrate){
-			context.putImageData(frame, 0, 0);
+			try{
+				context.putImageData(frame, 0, 0);
+			} catch(e){
+				console.log(e);
+			}
 		
 		}
 	}
 	counter+=1;
-	if(counter%discospeed==0){
-		color+=1;
-		color%=3;
-	}
 	requestAnimationFrame(draw);
+}
+
+function scale(num){
+	if(min<0||max<0)
+		return num;
+	var high = max-min;
+	var sf = 220/high;
+	var ret = (sf*(num-min)+220)*1000;
+	var ret = Math.floor(ret);
+	var ret = ret/1000;
+	playSynth(ret);
+	return ret;
 }
 
 function readFrame(){
@@ -98,48 +108,6 @@ function readFrame(){
 	return context.getImageData(0, 0, width, height);
 }
 
-function increaseRed(data, color){
-	var len = data.length;
-	for(var i = 0, j = 0; j<len; i++, j+=4){
-		data[j+color]+=70;
-		if(data[j]>255){
-			data[j] = 255;
-		}
-	}
-}
-function bsub(data){
-	var len = data.length;
-	for(var i = 0, j = 0; j<len; i++, j+=4){
-		for(var k=0; k<3; k++){
-			data[j+k]-=initialf[j+k];
-			if(data[j+k]<0){
-				data[j+k] = 0;
-			}
-			if(data[j+k]>255){
-				data[j+k]=255;
-			}
-		}
-	}
-}
-
-function bsub2(data, thresh){
-	var len = data.length;
-	for(var i=0, j=0; j<len; i++, j+=4){
-		var replace = true;
-		if(Math.abs(data[j]-initialf[j])>thresh){
-			if(Math.abs(data[j+1]-initialf[j+1])>thresh)
-				if(Math.abs(data[j+2]-initialf[j+2])>thresh){
-					replace = false;
-				}
-		}
-		if(replace){
-			data[j] = 0;
-			data[j+1] = 0;
-			data[j+2] = 0;
-		}
-	}
-}
-
 function binsub(data, thresh){
 	var len = data.length;
 	for(var i = 0, j = 0; j<len; i++, j+=4){
@@ -151,14 +119,14 @@ function binsub(data, thresh){
 				}
 		}
 		if(replace){
-			data[j] = 0;
-			data[j+1] = 0;
-			data[j+2] = 0;
-		}
-		else{
 			data[j] = 255;
 			data[j+1] = 255;
 			data[j+2] = 255;
+		}
+		else{
+			data[j] = 0;
+			data[j+1] = 0;
+			data[j+2] = 0;
 	
 		}
 	
@@ -216,16 +184,6 @@ function bgr2gray(data){
 		data[j+1] = lumin;
 		data[j+2] = lumin;
 	}
-}
-function weight(pos, sigma){
-	var y = pos/(4*width);
-	var x = pos - 4*width*y; 
-	var e = 2.718;
-	var pi = 3.14;
-	var exp = -1*(Math.pow(x, 2)+Math.pow(y, 2))/(2*Math.pow(sigma, 2));
-	var numerator = Math.pow(e, exp);
-	var denominator = 2*pi*Math.pow(sigma, 2);
-	return numerator/denominator;
 }
 
 function crop(xstrt, xend, ystrt, yend, data){

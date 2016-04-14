@@ -1,17 +1,11 @@
 var video, canvas, context, width, height;
-var color = 0;
 var counter = 0;
-var discospeed = 100;
 var xs = 0;
 var xe = 0;
 var ys = 0;
 var ye = 0;
 var initialf = null;
-var lastframe = null;
-var dobsub = false;
-var doincreaseRed = false;
 var dobinsub = false;
-var dobsub2 = false;
 var dobgr2gray = false;
 var dogaussblur = false;
 var subThresh = 10;
@@ -20,8 +14,8 @@ var dothresh = false;
 var calibrate = true;
 var t = 0;
 var noiseThresh = 0;
-var min = 0;
-var max = 0;
+var min = -1;
+var max = -1;
 var changemin = false;
 var changemax = false;
 
@@ -61,24 +55,6 @@ function setbinsub(){
 		dobinsub = true;
 	}	
 }
-function setbsub(){
-	if(dobsub2){
-		dobsub2 = false;
-		dobsub = false;
-	}
-	if(dobsub){
-		dobsub = false;
-		dobsub2 = true;	
-	}
-	else{
-		dobsub = true;
-		dobsub2 = false;
-		dobinsub = false;
-	}
-	updateAction();
-}
-
-
 function xsdelta(incr){
 	if(incr){
 		xs+=5;
@@ -114,10 +90,10 @@ function yedelta(incr){
 
 function threshup(incr){
 	if(incr){
-		t++;
+		t+=5;
 	}
 	else{
-		t--;
+		t-=5;
 	}
 }
 
