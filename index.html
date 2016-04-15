@@ -21,11 +21,16 @@ function start(){
 	dogaussblur = !dogaussblur;
 	//dobinsub = !dobinsub;
 	dothresh = !dothresh;
-	docrop = !docrop;	
-	if(started)
+	docrop = !docrop;
+	doColorChange = !doColorChange;	
+	if(started){
 		document.getElementById("strt").innerHTML = "Stop theremin ";
-	else
+		document.getElementById("count").style.display = '';
+	}
+	else{
 		document.getElementById("strt").innerHTML = "Start theremin";
+		document.getElementById("count").style.display = "none";
+	}
 }
 function playSynth(freq){
 	if(freq>0){

@@ -30,6 +30,7 @@ function startStream(stream){
 
 function draw(){
 	var frame = readFrame();
+	var scaled = 0;
 	if(frame){
 		if(counter>=100){
 			if(binsub&&!initialf){
@@ -65,7 +66,7 @@ function draw(){
 					document.getElementById("minval").innerHTML = white;
 				}
 
-				var scaled = scale(white, cont); 
+				scaled = scale(white, cont); 
 				document.getElementById("count").innerHTML = scaled;
 				//flip(frame.data);
 			}
@@ -78,9 +79,91 @@ function draw(){
 			}
 		
 		}
+		else{
+			frame = readFrame();
+			if(frame&&doColorChange){
+				increasedColor(frame.data, scaled);
+				//drawCroppedBounds(frame.data, xs, xe, ys, ye, 2);
+			}
+			try{
+				context.putImageData(frame, 0, 0);
+			} catch(e){
+				console.log(e);
+			}	
+		}
 	}
 	counter+=1;
 	requestAnimationFrame(draw);
+}
+
+function drawCroppedBounds(data, xstrt, xend, ystrt, yend, d){
+	var len = data.length/4;
+	for(var i=0; i<len; i++){
+		var xcond = (Math.abs(i%width-xend)<=d||Math.abs(i%width-xstrt)<=d)&&(i/width<yend&&i/width>ystrt);
+		if(xcond||(Math.abs(i/width-yend)<=d||Math.abs(i/width-ystrt)<=d)){
+			data[i*4] = 0;
+			data[i*4+1] = 0;
+			data[i*4+2] = 0;
+		}
+	}
+}
+
+function freqToColor(val){
+}
+
+function increasedColor(data, val){
+	var temp = Math.abs(val-220);
+	temp*=1275/220;
+	var r,g,b;
+	if(temp==0){
+		r = 0;
+		g = 0;
+		b = 0;
+	}
+	else if(temp<255){
+		r = temp;
+		g = 0;
+		b = 0;
+	}
+	else if(temp<=510){
+		r = 255;
+		g = temp-r;
+		b = 0;
+	}
+	else if(temp<=765){
+		r = temp-510;
+		g = 255;
+		b = 0;
+	}
+	else if(temp<=1020){
+		temp-=765;
+		r = 0;
+		g = 255;
+		b = temp;
+	}
+	else{
+		temp-=1020;
+		r = 0;
+		g = 255-temp;
+		b = 255;
+	}
+	/*r/=5;
+	g/=5;
+	b/=5;*/
+	var len = data.length;
+	if(temp!=0)
+		bgr2gray(data);
+	for(var i =0; i<len; i+=4){
+		data[i] += r;
+		data[i+1] += g;
+		data[i+2] += b;
+		if(data[i]>255)
+			data[i]=255;
+		if(data[i+1]>255)
+			data[i+1] = 255;
+		if(data[i+2]>255)
+			data[i+2] = 255;
+	}
 }
 
 function scale(num, mode){

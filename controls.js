@@ -11,6 +11,7 @@ var dogaussblur = false;
 var subThresh = 10;
 var docrop = false;
 var dothresh = false;
+var doColorChange = false; 
 var calibrate = true;
 var t = 0;
 var noiseThresh = 0;
