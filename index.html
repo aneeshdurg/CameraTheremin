@@ -12,7 +12,7 @@ var synth = new Tone.SimpleSynth().toMaster();
 var oldfreq = -1;
 function start(){
 	if(!started){
-		synth.triggerAttack(0);	
+		synth.triggerAttack(oldfreq);	
 	}
 	else{
 		synth.triggerRelease();
@@ -33,7 +33,14 @@ function start(){
 	}
 }
 function playSynth(freq){
-	if(freq>0){
+	if(freq>0){/*
+		while(Math.abs(oldfreq-freq)>0.1){
+			synth.setNote(oldfreq);
+			if(oldfreq<freq)
+				oldfreq+=0.1
+			else
+				oldfreq-=0.1
+		}*/
 		synth.setNote(freq);
 	}
 	oldfreq = freq;
@@ -71,6 +78,7 @@ function playSynth(freq){
 		<br>
 		<button onclick="setmax()">set max</button>
 		<button onclick="setmin()">set min</button>
+		<button onclick="clearmaxmin()">clear</button>
 		<br>
 		<p id="subThresh">subtractor threshold = 10</p>
 		<p id="maxval"></p>

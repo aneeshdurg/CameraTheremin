@@ -181,7 +181,7 @@ function scale(num, mode){
 			ret=0;
 		else if(ret<=233.082)
 			ret=220;
-		else if(ret<=(246.942+133.082)/2)
+		else if(ret<=(246.942+261.626)/2)
 			ret = 246.942;
 		else if(ret<=277.183)
 			ret = 261.626;

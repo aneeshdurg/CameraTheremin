@@ -33,6 +33,11 @@ function setcont(){
 		document.getElementById("cbutton").innerHTML = "discrete";	
 }
 
+function clearmaxmin(){
+	max = -1; 
+	min = -1;
+}
+
 function setmin(val){
 	changemin = true;
 }
