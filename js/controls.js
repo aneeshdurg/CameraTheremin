@@ -1,3 +1,5 @@
+//vairables and buttons
+
 var video, canvas, context, width, height;
 var counter = 0;
 var xs = 0;
@@ -11,6 +13,7 @@ var dogaussblur = false;
 var subThresh = 10;
 var docrop = false;
 var dothresh = false;
+var doColorChange = false; 
 var calibrate = true;
 var t = 0;
 var noiseThresh = 0;
@@ -18,11 +21,25 @@ var min = -1;
 var max = -1;
 var changemin = false;
 var changemax = false;
-
+var cont = true;
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||
                        navigator.msGetUserMedia);
+
+function setcont(){
+	cont = !cont;
+	if(cont)
+		document.getElementById("cbutton").innerHTML = "continuous";
+	else
+		document.getElementById("cbutton").innerHTML = "discrete";	
+}
+
+function clearmaxmin(){
+	max = -1; 
+	min = -1;
+}
+
 function setmin(val){
 	changemin = true;
 }
