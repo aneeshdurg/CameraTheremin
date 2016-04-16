@@ -14,3 +14,7 @@ canvas {
 	width: 275px;
 }
 
+.zoom {
+	zoom:1.5;
+	-moz-transform: scale(1.5);	
+}
