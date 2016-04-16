@@ -58,16 +58,16 @@ function draw(){
 				if(changemax){
 					max = white;
 					changemax = false;
-					document.getElementById("maxval").innerHTML = white;
+					document.getElementById("maxval").innerHTML = "Detected area(upper bound): "+white+" px";
 				}
 				if(changemin){
 					min = white;
 					changemin = false;
-					document.getElementById("minval").innerHTML = white;
+					document.getElementById("minval").innerHTML = "Detected area(lower bound): "+white+" px";
 				}
 
 				scaled = scale(white, cont); 
-				document.getElementById("count").innerHTML = scaled;
+				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
 		}

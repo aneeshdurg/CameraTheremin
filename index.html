@@ -14,11 +14,9 @@
 				if(!started){
 					synth.triggerAttack(oldfreq);	
 					document.getElementById("strt").innerHTML = "Start theremin";
-					document.getElementById("count").style.display = "none";
 				} else{
 					synth.triggerRelease();
 					document.getElementById("strt").innerHTML = "Stop theremin ";
-					document.getElementById("count").style.display = '';
 				}
 				started = !started;
 				dogaussblur = !dogaussblur;
@@ -27,6 +25,7 @@
 				doColorChange = !doColorChange;	
 			}
 			function playSynth(freq){
+				document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
 				if(freq>0){
 					synth.setNote(freq);
 				}
@@ -38,9 +37,9 @@
 	<body>
 		<video id="vid" hidden></video>
 		<canvas id="c"></canvas>
-		<p id="action" hidden>none</p>
 		<br>
 		<button id="strt" onclick="start()">Start theremin</button>
+		<button id="cbutton" onclick="setcont()">continuous</button>
 		<button onclick="setcalibrate()">calibrate</button>
 		<br>
 		<div id="calibration">
@@ -67,11 +66,9 @@
 				<button onclick="setmin()">set min</button>
 				<button onclick="clearmaxmin()">clear</button>
 			<br>
-			<p id="subThresh">subtractor threshold = 10</p>
+			<p id="subThresh" hidden>subtractor threshold = 10</p>
 			<p id="maxval"></p>
 			<p id="minval"></p>
+			<p id="count"></p>
 		</div>
-		<button id="cbutton" onclick="setcont()">continuous</button>
-		<br hidden>
-		<p id="count"></p>
-
+		<p id="freq"></p>
