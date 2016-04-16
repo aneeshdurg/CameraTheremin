@@ -1,3 +1,4 @@
+//sets up camera
 function initialize(){
 	video = document.getElementById("vid");
 	canvas = document.getElementById("c");
@@ -28,6 +29,7 @@ function startStream(stream){
 	requestAnimationFrame(draw);
 }
 
+//calls other functions to do detection/edit frame
 function draw(){
 	var frame = readFrame();
 	var scaled = 0;
@@ -40,16 +42,14 @@ function draw(){
 				if(dobinsub){
 					binsub(frame.data, subThresh);
 				}
-				if(dobgr2gray){
-					bgr2gray(frame.data);
-				}
 				if(dogaussblur){
 					GaussBlur(frame.data, 1.5);
 				}
 				
 				if(dothresh){
 					threshold(frame.data, t, 0, 255);
-					removeNoise(frame.data, noiseThresh, 255, 0);
+					if(noiseThresh!=0)
+						removeNoise(frame.data, noiseThresh, 255, 0);
 				}
 				if(docrop){
 					crop(xs, xe, ys, ye, frame.data);
@@ -78,8 +78,7 @@ function draw(){
 				console.log(e);
 			}
 		
-		}
-		else{
+		} else{
 			frame = readFrame();
 			if(frame&&doColorChange){
 				increasedColor(frame.data, scaled);
@@ -96,21 +95,7 @@ function draw(){
 	requestAnimationFrame(draw);
 }
 
-function drawCroppedBounds(data, xstrt, xend, ystrt, yend, d){
-	var len = data.length/4;
-	for(var i=0; i<len; i++){
-		var xcond = (Math.abs(i%width-xend)<=d||Math.abs(i%width-xstrt)<=d)&&(i/width<yend&&i/width>ystrt);
-		if(xcond||(Math.abs(i/width-yend)<=d||Math.abs(i/width-ystrt)<=d)){
-			data[i*4] = 0;
-			data[i*4+1] = 0;
-			data[i*4+2] = 0;
-		}
-	}
-}
-
-function freqToColor(val){
-}
-
+//adds color to data depending on val
 function increasedColor(data, val){
 	var temp = Math.abs(val-220);
 	temp*=1275/220;
@@ -119,37 +104,30 @@ function increasedColor(data, val){
 		r = 0;
 		g = 0;
 		b = 0;
-	}
-	else if(temp<255){
+	} else if(temp<255){
 		r = temp;
 		g = 0;
 		b = 0;
-	}
-	else if(temp<=510){
+	} else if(temp<=510){
 		r = 255;
 		g = temp-r;
 		b = 0;
-	}
-	else if(temp<=765){
+	} else if(temp<=765){
 		r = temp-510;
 		g = 255;
 		b = 0;
-	}
-	else if(temp<=1020){
+	} else if(temp<=1020){
 		temp-=765;
 		r = 0;
 		g = 255;
 		b = temp;
-	}
-	else{
+	} else{
 		temp-=1020;
 		r = 0;
 		g = 255-temp;
 		b = 255;
 	}
-	/*r/=5;
-	g/=5;
-	b/=5;*/
+
 	var len = data.length;
 	if(temp!=0)
 		bgr2gray(data);
@@ -166,6 +144,9 @@ function increasedColor(data, val){
 	}
 }
 
+//either sets num to preset frequencies
+//or uses a linear function to map it to 
+//a range of frequencies
 function scale(num, mode){
 	if(min<0||max<0||num==0){
 		playSynth(0);
@@ -195,11 +176,12 @@ function scale(num, mode){
 			ret = 391.995;
 		else
 			ret = 440;
-	}	
+	}
+	//sends frequency to synth	
 	playSynth(ret);
 	return ret;
 }
-
+//gets frame
 function readFrame(){
 	try{
 		context.save();
@@ -212,7 +194,9 @@ function readFrame(){
 	}
 	return context.getImageData(0, 0, width, height);
 }
-
+//subtracts initial frame from current frame
+//and sets pixels that differ by more than
+//thresh to white
 function binsub(data, thresh){
 	var len = data.length;
 	for(var i = 0, j = 0; j<len; i++, j+=4){
@@ -237,6 +221,8 @@ function binsub(data, thresh){
 	
 	}
 }
+//Blur function (incomplete doesn't actually use a 
+//Gaussian distrubtion)
 function GaussBlur(data, sigma){
 	bgr2gray(data);
 	var len = data.length;
@@ -281,6 +267,7 @@ function GaussBlur(data, sigma){
 
 	}
 }
+
 function bgr2gray(data){
 	var len = data.length;
 	for(var i = 0, j = 0; j<len; i++, j+=4){
@@ -302,9 +289,7 @@ function crop(xstrt, xend, ystrt, yend, data){
 	}
 }
 
-
 function threshold(data, thresh, a, b){
-	bgr2gray(data);
 	var len = data.length;
 	for(var i=0; i<len; i+=4){
 		if(data[i]>thresh){

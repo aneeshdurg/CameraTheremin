@@ -1,3 +1,5 @@
+//vairables and buttons
+
 var video, canvas, context, width, height;
 var counter = 0;
 var xs = 0;
@@ -20,11 +22,11 @@ var max = -1;
 var changemin = false;
 var changemax = false;
 var cont = true;
-
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||
                        navigator.msGetUserMedia);
+
 function setcont(){
 	cont = !cont;
 	if(cont)

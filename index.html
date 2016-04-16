@@ -6,45 +6,32 @@
 		<script src="controls.js"></script>
 		<script src="script.js"></script>
 		<script>
-var started = false;
-var playing = false;
-var synth = new Tone.SimpleSynth().toMaster();
-var oldfreq = -1;
-function start(){
-	if(!started){
-		synth.triggerAttack(oldfreq);	
-	}
-	else{
-		synth.triggerRelease();
-	}
-	started = !started;
-	dogaussblur = !dogaussblur;
-	//dobinsub = !dobinsub;
-	dothresh = !dothresh;
-	docrop = !docrop;
-	doColorChange = !doColorChange;	
-	if(started){
-		document.getElementById("strt").innerHTML = "Stop theremin ";
-		document.getElementById("count").style.display = '';
-	}
-	else{
-		document.getElementById("strt").innerHTML = "Start theremin";
-		document.getElementById("count").style.display = "none";
-	}
-}
-function playSynth(freq){
-	if(freq>0){/*
-		while(Math.abs(oldfreq-freq)>0.1){
-			synth.setNote(oldfreq);
-			if(oldfreq<freq)
-				oldfreq+=0.1
-			else
-				oldfreq-=0.1
-		}*/
-		synth.setNote(freq);
-	}
-	oldfreq = freq;
-}
+			var started = false;
+			var playing = false;
+			var synth = new Tone.SimpleSynth().toMaster();
+			var oldfreq = -1;
+			function start(){ 
+				if(!started){
+					synth.triggerAttack(oldfreq);	
+					document.getElementById("strt").innerHTML = "Start theremin";
+					document.getElementById("count").style.display = "none";
+				} else{
+					synth.triggerRelease();
+					document.getElementById("strt").innerHTML = "Stop theremin ";
+					document.getElementById("count").style.display = '';
+				}
+				started = !started;
+				dogaussblur = !dogaussblur;
+				dothresh = !dothresh;
+				docrop = !docrop;
+				doColorChange = !doColorChange;	
+			}
+			function playSynth(freq){
+				if(freq>0){
+					synth.setNote(freq);
+				}
+				oldfreq = freq;
+			}
 		</script>
 	</head>
 
@@ -57,32 +44,32 @@ function playSynth(freq){
 		<button onclick="setcalibrate()">calibrate</button>
 		<br>
 		<div id="calibration">
-		<button onclick="threshup(true)">thresh+</button>
-		<button onclick="threshup(false)">thresh-</button>			
-		<br>
-		<button onclick="xsdelta(true)">xs+</button>
-		<button onclick="xsdelta(false)">xs-</button>
-		<button onclick="xedelta(true)">xe+</button>
-		<button onclick="xedelta(false)">xe-</button>
-		<button onclick="ysdelta(true)">ys+</button>
-		<button onclick="ysdelta(false)">ys-</button>
-		<button onclick="yedelta(true)">ye+</button>
-		<button onclick="yedelta(false)">ye-</button>
-		<br>
-		<button onclick="nthreshdelta(true)">+</button>
-		<button onclick="nthreshdelta(false)">-</button>
-		<br>
-		<button onclick="setbinsub()">binsub</button>
-		<button onclick="stUp()">st+</button>
-		<button onclick="stdn()">st-</button>
-		<br>
-		<button onclick="setmax()">set max</button>
-		<button onclick="setmin()">set min</button>
-		<button onclick="clearmaxmin()">clear</button>
-		<br>
-		<p id="subThresh">subtractor threshold = 10</p>
-		<p id="maxval"></p>
-		<p id="minval"></p>
+			<button onclick="threshup(true)">thresh+</button>
+			<button onclick="threshup(false)">thresh-</button>			
+			<br>
+				<button onclick="xsdelta(true)">xs+</button>
+				<button onclick="xsdelta(false)">xs-</button>
+				<button onclick="xedelta(true)">xe+</button>
+				<button onclick="xedelta(false)">xe-</button>
+				<button onclick="ysdelta(true)">ys+</button>
+				<button onclick="ysdelta(false)">ys-</button>
+				<button onclick="yedelta(true)">ye+</button>
+				<button onclick="yedelta(false)">ye-</button>
+			<br>
+				<button onclick="nthreshdelta(true)">+</button>
+				<button onclick="nthreshdelta(false)">-</button>
+			<br>
+				<button onclick="setbinsub()">binsub</button>
+				<button onclick="stUp()">st+</button>
+				<button onclick="stdn()">st-</button>
+			<br>
+				<button onclick="setmax()">set max</button>
+				<button onclick="setmin()">set min</button>
+				<button onclick="clearmaxmin()">clear</button>
+			<br>
+			<p id="subThresh">subtractor threshold = 10</p>
+			<p id="maxval"></p>
+			<p id="minval"></p>
 		</div>
 		<button id="cbutton" onclick="setcont()">continuous</button>
 		<br hidden>
