@@ -38,6 +38,10 @@ function setcont(){
 function clearmaxmin(){
 	max = -1; 
 	min = -1;
+	document.getElementById("maxval").innerHTML = "";
+	document.getElementById("minval").innerHTML = "";
+	if(started)
+		start();
 }
 
 function setmin(val){

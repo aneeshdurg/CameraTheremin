@@ -1,0 +1,21 @@
+canvas {
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+}
+#calibration {
+	margin: auto;
+	width: 320px;
+}
+#mainControls {
+	margin: auto;
+	width: 275px;
+}
+
+.zoom {
+	transform-origin: left top;
+	transform: scale(1.3);
+	margin-right: 23.08%	
+}
