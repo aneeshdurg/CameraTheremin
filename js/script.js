@@ -33,7 +33,7 @@ function startStream(stream){
 function draw(){
 	var frame = readFrame();
 	var scaled = 0;
-	if(frame){
+	if(frame&&started){
 		if(counter>=100){
 			if(binsub&&!initialf){
 				initialf = frame.data;
@@ -56,14 +56,18 @@ function draw(){
 				}
 				var white = countWhite(frame.data);
 				if(changemax){
-					max = white;
 					changemax = false;
 					document.getElementById("maxval").innerHTML = "Detected area(upper bound): "+white+" px";
+					if(min!=-1&&max==-1)
+						setcalibrate();
+					max = white;
 				}
 				if(changemin){
-					min = white;
 					changemin = false;
 					document.getElementById("minval").innerHTML = "Detected area(lower bound): "+white+" px";
+					if(min==-1&&max!=-1)
+						setcalibrate();
+					min = white;
 				}
 
 				scaled = scale(white, cont); 
@@ -97,6 +101,8 @@ function draw(){
 
 //adds color to data depending on val
 function increasedColor(data, val){
+	if (val==220)
+		val = 440;
 	var temp = Math.abs(val-220);
 	temp*=1275/220;
 	var r,g,b;

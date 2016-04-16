@@ -2,9 +2,11 @@
 <html>
 	<head>
 		<title>CameraTheremin</title>
-		<script src="Tone.min.js"></script>
-		<script src="buttons.js"></script>
-		<script src="script.js"></script>
+		<link href="style/favicon.ico" rel="icon" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<script src="js/Tone.min.js"></script>
+		<script src="js/buttons.js"></script>
+		<script src="js/script.js"></script>
 		<script>
 			var started = false;
 			var playing = false;
@@ -13,10 +15,12 @@
 			function start(){ 
 				if(!started){
 					synth.triggerAttack(oldfreq);	
-					document.getElementById("strt").innerHTML = "Start theremin";
+					document.getElementById("strt").innerHTML = "Stop theremin";
 				} else{
 					synth.triggerRelease();
-					document.getElementById("strt").innerHTML = "Stop theremin ";
+					document.getElementById("strt").innerHTML = "Start theremin ";
+					document.getElementById("freq").innerHTML = "Frequency: 0 Hz";
+					document.getElementById("count").innerHTML = "Detected area: 0 px";
 				}
 				started = !started;
 				dogaussblur = !dogaussblur;
@@ -38,9 +42,11 @@
 		<video id="vid" hidden></video>
 		<canvas id="c"></canvas>
 		<br>
+		<div id="mainControls">
 		<button id="strt" onclick="start()">Start theremin</button>
 		<button id="cbutton" onclick="setcont()">continuous</button>
 		<button onclick="setcalibrate()">calibrate</button>
+		</div>
 		<br>
 		<div id="calibration">
 			<button onclick="threshup(true)">thresh+</button>
@@ -50,6 +56,7 @@
 				<button onclick="xsdelta(false)">xs-</button>
 				<button onclick="xedelta(true)">xe+</button>
 				<button onclick="xedelta(false)">xe-</button>
+				<br>
 				<button onclick="ysdelta(true)">ys+</button>
 				<button onclick="ysdelta(false)">ys-</button>
 				<button onclick="yedelta(true)">ye+</button>
@@ -67,8 +74,8 @@
 				<button onclick="clearmaxmin()">clear</button>
 			<br>
 			<p id="subThresh" hidden>subtractor threshold = 10</p>
-			<p id="maxval"></p>
-			<p id="minval"></p>
-			<p id="count"></p>
+			<p id="maxval" align="center"></p>
+			<p id="minval" align="center"></p>
+			<p id="count" align="center"></p>
 		</div>
-		<p id="freq"></p>
+		<p id="freq" align="center"></p>
