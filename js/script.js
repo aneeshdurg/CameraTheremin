@@ -52,7 +52,7 @@ function draw(){
 						removeNoise(frame.data, noiseThresh, 255, 0);
 				}
 				if(docrop){
-					crop(xs, xe, ys, ye, frame.data);
+					//crop(xs, xe, ys, ye, frame.data);
 				}
 				var white = countWhite(frame.data);
 				if(changemax){
@@ -205,26 +205,28 @@ function readFrame(){
 //thresh to white
 function binsub(data, thresh){
 	var len = data.length;
-	for(var i = 0, j = 0; j<len; i++, j+=4){
-		var replace = true;
-		if(Math.abs(data[j]-initialf[j])>thresh){
-			if(Math.abs(data[j+1]-initialf[j+1])>thresh)
-				if(Math.abs(data[j+2]-initialf[j+2])>thresh){
-					replace = false;
-				}
+	for(var i = ys; i<=ye; i++){
+		for(var j = xs; j<=xe; j++){
+			var k = i*4*width+4*j
+			var replace = true;
+			if(Math.abs(data[k]-initialf[k])>thresh){
+				if(Math.abs(data[k+1]-initialf[k+1])>thresh)
+					if(Math.abs(data[k+2]-initialf[k+2])>thresh){
+						replace = false;
+					}
+			}
+			if(replace){
+				data[k] = 255;
+				data[k+1] = 255;
+				data[k+2] = 255;
+			}
+			else{
+				data[k] = 0;
+				data[k+1] = 0;
+				data[k+2] = 0;
+			}
+		
 		}
-		if(replace){
-			data[j] = 255;
-			data[j+1] = 255;
-			data[j+2] = 255;
-		}
-		else{
-			data[j] = 0;
-			data[j+1] = 0;
-			data[j+2] = 0;
-	
-		}
-	
 	}
 }
 //Blur function (incomplete doesn't actually use a 
@@ -232,81 +234,76 @@ function binsub(data, thresh){
 function GaussBlur(data, sigma){
 	bgr2gray(data);
 	var len = data.length;
-	for(var i=0, j=0; j<len; i++, j+=4){
-		try{
-			var current = 0;
-			var num = 9;
-			
-			current += data[j]*0.147;//*weight(j, sigma);
-			current += data[j+4]*0.118;//*weight(j+4, sigma);
-			if(j>=4){
-				current += data[j-4]*0.118;//*weight(j-4, sigma);	
-			}
-			else{
-				num--;
-			}
+	for(var i = ys; i<=ye; i++){
+		for(var j = xs; j<=xe; j++){
+			var k = i*4*width+4*j
+			try{
+				var current = 0;
+				var num = 9;
+				
+				current += data[k]*0.147;//*weight(j, sigma);
+				current += data[k+4]*0.118;//*weight(j+4, sigma);
+				if(k>=4){
+					current += data[k-4]*0.118;//*weight(j-4, sigma);	
+				}
+				else{
+					num--;
+				}
 
-			current += data[j+4*width]*0.118;//*weight(j+4*width, sigma);
-			current += data[j+4*width+4]*0.095;//*weight(j+4*width+4, sigma);	
-			current += data[j+4*width-4]*0.095;//*weight(j+4*width-4, sigma);
+				current += data[k+4*width]*0.118;//*weight(j+4*width, sigma);
+				current += data[k+4*width+4]*0.095;//*weight(j+4*width+4, sigma);	
+				current += data[k+4*width-4]*0.095;//*weight(j+4*width-4, sigma);	
 
-			if(j>=4*width){
-				current += data[j-(4*width)]*0.118;//*weight(j-(4*width), sigma);
-				current += data[j-(4*width)+4]*0.095;//*weight(j-(4*width)+4, sigma);
-				if(j-(4*width)>=4)
-					current += data[j-(4*width)-4]*0.095;//*weight(j-(4*width)-4, sigma);
-				else
-						num--;
+				if(k>=4*width){
+					current += data[k-(4*width)]*0.118;//*weight(j-(4*width), sigma);
+					current += data[k-(4*width)+4]*0.095;//*weight(j-(4*width)+4, sigma);
+					if(k-(4*width)>=4)
+						current += data[k-(4*width)-4]*0.095;//*weight(j-(4*width)-4, sigma);
+					else
+							num--;
+				}
+				else{
+					num-=3;
+				}
+
+				//current/=num;
+				data[k] = current;
+				data[k+1] = current;
+				data[k+2] = current;	
+
+			} catch(e){
+				console.log(e);
 			}
-			else{
-				num-=3;
-			}
-
-			//current/=num;
-			data[j] = current;
-			data[j+1] = current;
-			data[j+2] = current;
-
-		} catch(e){
-			console.log(e);
 		}
-
 	}
 }
 
 function bgr2gray(data){
-	var len = data.length;
-	for(var i = 0, j = 0; j<len; i++, j+=4){
-		var lumin = 0.21*data[j]+0.72*data[j+1]+0.07*data[j+2];
-		data[j] = lumin;
-		data[j+1] = lumin;
-		data[j+2] = lumin;
-	}
-}
-
-function crop(xstrt, xend, ystrt, yend, data){
-	var len = data.length/4;
-	for(var i=0; i<len; i++){
-		if(i%width>xend||i%width<xstrt||i/width>yend||i/width<ystrt){
-			data[i*4] = 0;
-			data[i*4+1] = 0;
-			data[i*4+2] = 0;
+	for(var i = ys; i<=ye; i++){
+		for(var j = xs; j<=xe; j++){
+			var k = i*4*width+4*j
+			var lumin = 0.21*data[k]+0.72*data[k+1]+0.07*data[k+2];
+			data[k] = lumin;
+			data[k+1] = lumin;
+			data[k+2] = lumin;
 		}
 	}
 }
 
 function threshold(data, thresh, a, b){
-	var len = data.length;
-	for(var i=0; i<len; i+=4){
-		if(data[i]>thresh){
-			data[i] = a;
-			data[i+1] = a;
-			data[i+2] = a;
-		}
-		else{
-			data[i] = b;
-			data[i+1] = b;
-			data[i+2] = b;
+	for(var i = ys; i<=ye; i++){
+		for(var j = xs; j<=xe; j++){
+			var k = i*4*width+4*j
+			if(data[k]>thresh){
+				data[k] = a;
+				data[k+1] = a;
+				data[k+2] = a;
+			}		
+			else{
+				data[k] = b;
+				data[k+1] = b;
+				data[k+2] = b;
+			}	
 		}
 	}
 }
@@ -347,11 +344,13 @@ function removeNoise(data, t, a, b){
 }
 
 function countWhite(data){
-	var len = data.length;
 	var ret = 0;
-	for(var i = 0; i<len; i+=4){
-		if(data[i]==255){
-			ret+=1;
+	for(var i = ys; i<=ye; i++){
+		for(var j = xs; j<=xe; j++){
+			var k = i*4*width+4*j
+			if(data[k]==255){
+				ret+=1;
+			}
 		}
 	}
 	return ret;
