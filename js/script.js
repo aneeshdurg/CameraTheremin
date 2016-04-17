@@ -205,8 +205,8 @@ function readFrame(){
 //thresh to white
 function binsub(data, thresh){
 	var len = data.length;
-	for(var i = ys; i<=ye; i++){
-		for(var j = xs; j<=xe; j++){
+	for(var i = ys; i<ye; i++){
+		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			var replace = true;
 			if(Math.abs(data[k]-initialf[k])>thresh){
@@ -234,8 +234,8 @@ function binsub(data, thresh){
 function GaussBlur(data, sigma){
 	bgr2gray(data);
 	var len = data.length;
-	for(var i = ys; i<=ye; i++){
-		for(var j = xs; j<=xe; j++){
+	for(var i = ys; i<ye; i++){
+		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			try{
 				var current = 0;
@@ -279,8 +279,8 @@ function GaussBlur(data, sigma){
 }
 
 function bgr2gray(data){
-	for(var i = ys; i<=ye; i++){
-		for(var j = xs; j<=xe; j++){
+	for(var i = ys; i<ye; i++){
+		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			var lumin = 0.21*data[k]+0.72*data[k+1]+0.07*data[k+2];
 			data[k] = lumin;
@@ -291,8 +291,8 @@ function bgr2gray(data){
 }
 
 function threshold(data, thresh, a, b){
-	for(var i = ys; i<=ye; i++){
-		for(var j = xs; j<=xe; j++){
+	for(var i = ys; i<ye; i++){
+		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			if(data[k]>thresh){
 				data[k] = a;

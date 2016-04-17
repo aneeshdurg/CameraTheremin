@@ -10,12 +10,12 @@ var initialf = null;
 var dobinsub = false;
 var dobgr2gray = false;
 var dogaussblur = false;
-var subThresh = 10;
 var docrop = false;
 var dothresh = false;
 var doColorChange = false; 
 var calibrate = true;
-var t = 0;
+var t = 70;
+var subThresh = 70;
 var noiseThresh = 0;
 var min = -1;
 var max = -1;
@@ -40,8 +40,9 @@ function clearmaxmin(){
 	min = -1;
 	document.getElementById("maxval").innerHTML = "";
 	document.getElementById("minval").innerHTML = "";
-	if(started)
+	if(started){
 		start();
+	}
 }
 
 function setmin(val){
@@ -69,12 +70,13 @@ function stdn(){
 
 
 function setbinsub(){
-	if(dobinsub){
-		dobinsub = false;
-	}
-	else{
-		dobinsub = true;
-	}	
+		dobinsub = !dobinsub;
+		if(dobinsub){
+			document.getElementById("binsubButton").innerHTML = "Thresholder";	
+		}
+		else{
+			document.getElementById("binsubButton").innerHTML = "Binary Subtractor";	
+		}
 }
 function xsdelta(incr){
 	if(incr){
@@ -143,7 +145,9 @@ function threshup(incr){
 }
 
 function threshDelta(val){
-	t = val;
+		subThresh = val;
+		t = val;
+	
 }
 
 function nthreshdelta(incr){
