@@ -18,6 +18,7 @@
 			$(function(){
 				$("#threshSlider").slider({
 					max: 255,
+					value: 70,
 					slide: function(event, ui){
 						threshDelta(ui.value);	
 					}
@@ -64,9 +65,12 @@
 		<div id="calibration">
 			<!--button onclick="threshup(true)">thresh+</button>
 			<button onclick="threshup(false)">thresh-</button--!>			
-			<p>Threshold Slider</p>
+			<p id="sliderLabel">Threshold slider</p>
 			<div id="threshSlider"></div>
 			<br>
+				<button id="binsubButton" onclick="setbinsub()">Binary Subtractor</button>
+			<br>
+				<br>	
 				<button onclick="xsdelta(true)">xs+</button>
 				<button onclick="xsdelta(false)">xs-</button>
 				<button onclick="xedelta(true)">xe+</button>
@@ -77,16 +81,12 @@
 				<button onclick="ysdelta(false)">ys-</button>
 				<button onclick="yedelta(true)">ye+</button>
 				<button onclick="yedelta(false)">ye-</button>
-			<br>
+			<!--br>
 				<br>
 				<button onclick="nthreshdelta(true)">+</button>
-				<button onclick="nthreshdelta(false)">-</button>
+				<button onclick="nthreshdelta(false)">-</button--!>
 			<br>
-				<br>
-				<button onclick="setbinsub()">binsub</button>
-				<button onclick="stUp()">st+</button>
-				<button onclick="stdn()">st-</button>
-			<br>
+				
 				<br>
 				<button onclick="setmax()">set max</button>
 				<button onclick="setmin()">set min</button>
