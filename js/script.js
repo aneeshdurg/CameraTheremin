@@ -10,7 +10,25 @@ function initialize(){
 	canvas.height = height;
 	xe = width;
 	ye = height;
-
+	
+	$(function(){
+		$("#xSlider").slider({
+			max: width,
+			values: [0, width],
+			slide: function(event, ui){
+				xDelta(ui.values);	
+			}
+		});
+	});
+	$(function(){
+		$("#ySlider").slider({
+			max: height,
+			values: [0, height],
+			slide: function(event, ui){
+				yDelta(ui.values);	
+			}
+		});
+	});
 	var constraints = {
 		video: {
 			mandatory: {
@@ -50,9 +68,6 @@ function draw(){
 					threshold(frame.data, t, 0, 255);
 					if(noiseThresh!=0)
 						removeNoise(frame.data, noiseThresh, 255, 0);
-				}
-				if(docrop){
-					//crop(xs, xe, ys, ye, frame.data);
 				}
 				var white = countWhite(frame.data);
 				if(changemax){

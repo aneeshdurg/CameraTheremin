@@ -24,6 +24,7 @@
 					}
 				});
 			});
+			
 			function start(){ 
 				if(!started){
 					synth.triggerAttack(oldfreq);	
@@ -54,45 +55,27 @@
 		<video id="vid" hidden></video>
 		<canvas id="c"></canvas>
 		<br>
-		<hr width=340>
+		<hr width=360>
 		<br>
 		<div id="mainControls">
 		<button id="strt" onclick="start()">Start theremin</button>
 		<button id="cbutton" onclick="setcont()">continuous</button>
 		<button onclick="setcalibrate()">calibrate</button>
 		</div>
-		<br>
 		<div id="calibration">
-			<!--button onclick="threshup(true)">thresh+</button>
-			<button onclick="threshup(false)">thresh-</button--!>			
+			<br>
+			<button id="binsubButton" onclick="setbinsub()">Binary Subtractor</button>
 			<p id="sliderLabel">Threshold slider</p>
 			<div id="threshSlider"></div>
+				<p> Crop x slider</p>
+				<div id="xSlider"></div>
+				<p> Crop y slider</p>
+				<div id="ySlider"></div>
 			<br>
-				<button id="binsubButton" onclick="setbinsub()">Binary Subtractor</button>
-			<br>
-				<br>	
-				<button onclick="xsdelta(true)">xs+</button>
-				<button onclick="xsdelta(false)">xs-</button>
-				<button onclick="xedelta(true)">xe+</button>
-				<button onclick="xedelta(false)">xe-</button>
-			<br>
-				<br>
-				<button onclick="ysdelta(true)">ys+</button>
-				<button onclick="ysdelta(false)">ys-</button>
-				<button onclick="yedelta(true)">ye+</button>
-				<button onclick="yedelta(false)">ye-</button>
-			<!--br>
-				<br>
-				<button onclick="nthreshdelta(true)">+</button>
-				<button onclick="nthreshdelta(false)">-</button--!>
-			<br>
-				
-				<br>
 				<button onclick="setmax()">set max</button>
 				<button onclick="setmin()">set min</button>
 				<button onclick="clearmaxmin()">clear</button>
 			<br>
-			<p id="subThresh" hidden>subtractor threshold = 10</p>
 			<p id="maxval" align="center"></p>
 			<p id="minval" align="center"></p>
 			<p id="count" align="center"></p>
