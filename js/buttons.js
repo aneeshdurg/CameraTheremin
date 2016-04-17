@@ -58,17 +58,6 @@ function setcalibrate(){
 		document.getElementById("calibration").style.display = 'none';
 }
 
-function stUp(){
-	subThresh+=1;
-	document.getElementById("subThresh").innerHTML = "subtractor threshold = "+subThresh;
-	
-}
-function stdn(){
-	subThresh-=1;
-	document.getElementById("subThresh").innerHTML = "subtractor threshold = "+subThresh;
-}
-
-
 function setbinsub(){
 		dobinsub = !dobinsub;
 		if(dobinsub){
@@ -78,69 +67,21 @@ function setbinsub(){
 			document.getElementById("binsubButton").innerHTML = "Binary Subtractor";	
 		}
 }
-function xsdelta(incr){
-	if(incr){
-		xs+=5;
-	}
-	else{
-		xs-=5;
-	}
-	if(xs>xe){
-		xs = xe;
-	}
-	if(xs<0){
-		xs = 0;
-	}
-}
-function xedelta(incr){
-	if(incr){
-		xe-=5;
-	}
-	else{
-		xe+=5;
-	}
-	if(xe<xs){
-		xe = xs;
-	}
-	if(xe>width){
-		xe = width;
-	}
-}
-function ysdelta(incr){
-	if(incr){
-		ys+=5;
-	}
-	else{
-		ys-=5;
-	}
-	if(ys>ye){
-		ys = ye;
-	}
-	if(ys<0){
-		ys = 0;
-	}
-}
-function yedelta(incr){
-	if(incr){
-		ye-=5;
-	}
-	else{
-		ye+=5;
-	}
-	if(ye<ys){
-		ye = ys;
-	}
-	if(ye>height){
-		ye = height;
-	}
-}
 
-function threshup(incr){
-	if(incr){
-		t+=5;
+function xDelta(vals){
+	xs = vals[0];
+	xe = vals[1];
+	if(xs>xe){
+		xs = vals[1];
+		xe = vals[0];
 	}
-	else{
-		t-=5;
+}
+function yDelta(vals){
+	ys = vals[0];
+	ye = vals[1];
+	if(ys>ye){
+		ys = vals[1];
+		ye = vals[0];
 	}
 }
 
