@@ -4,6 +4,9 @@
 		<title>CameraTheremin</title>
 		<link href="style/favicon.ico" rel="icon" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-2.2.3.js"></script>
+  		<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 		<script src="js/Tone.min.js"></script>
 		<script src="js/buttons.js"></script>
 		<script src="js/script.js"></script>
@@ -12,6 +15,14 @@
 			var playing = false;
 			var synth = new Tone.SimpleSynth().toMaster();
 			var oldfreq = -1;
+			$(function(){
+				$("#threshSlider").slider({
+					max: 255,
+					slide: function(event, ui){
+						threshDelta(ui.value);	
+					}
+				});
+			});
 			function start(){ 
 				if(!started){
 					synth.triggerAttack(oldfreq);	
@@ -42,6 +53,8 @@
 		<video id="vid" hidden></video>
 		<canvas id="c"></canvas>
 		<br>
+		<hr width=340>
+		<br>
 		<div id="mainControls">
 		<button id="strt" onclick="start()">Start theremin</button>
 		<button id="cbutton" onclick="setcont()">continuous</button>
@@ -49,9 +62,10 @@
 		</div>
 		<br>
 		<div id="calibration">
-			<button onclick="threshup(true)">thresh+</button>
-			<button onclick="threshup(false)">thresh-</button>			
-			<br>
+			<!--button onclick="threshup(true)">thresh+</button>
+			<button onclick="threshup(false)">thresh-</button--!>			
+			<p>Threshold Slider</p>
+			<div id="threshSlider"></div>
 			<br>
 				<button onclick="xsdelta(true)">xs+</button>
 				<button onclick="xsdelta(false)">xs-</button>

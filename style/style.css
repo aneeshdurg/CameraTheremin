@@ -5,6 +5,15 @@ canvas {
 	margin-right: auto;
 	display: block;
 }
+
+p {
+	font-family: "Arial";
+}
+
+button {
+	font-family: "Arial";
+}
+
 #calibration {
 	margin: auto;
 	width: 320px;
@@ -17,5 +26,6 @@ canvas {
 .zoom {
 	transform-origin: left top;
 	transform: scale(1.3);
-	margin-right: 23.08%	
+	margin-right: 23.08%;	
 }
+

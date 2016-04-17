@@ -345,8 +345,8 @@ function removeNoise(data, t, a, b){
 
 function countWhite(data){
 	var ret = 0;
-	for(var i = ys; i<=ye; i++){
-		for(var j = xs; j<=xe; j++){
+	for(var i = ys; i<ye; i++){
+		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			if(data[k]==255){
 				ret+=1;

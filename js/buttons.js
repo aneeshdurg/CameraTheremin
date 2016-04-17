@@ -83,6 +83,12 @@ function xsdelta(incr){
 	else{
 		xs-=5;
 	}
+	if(xs>xe){
+		xs = xe;
+	}
+	if(xs<0){
+		xs = 0;
+	}
 }
 function xedelta(incr){
 	if(incr){
@@ -90,6 +96,12 @@ function xedelta(incr){
 	}
 	else{
 		xe+=5;
+	}
+	if(xe<xs){
+		xe = xs;
+	}
+	if(xe>width){
+		xe = width;
 	}
 }
 function ysdelta(incr){
@@ -99,6 +111,12 @@ function ysdelta(incr){
 	else{
 		ys-=5;
 	}
+	if(ys>ye){
+		ys = ye;
+	}
+	if(ys<0){
+		ys = 0;
+	}
 }
 function yedelta(incr){
 	if(incr){
@@ -106,6 +124,12 @@ function yedelta(incr){
 	}
 	else{
 		ye+=5;
+	}
+	if(ye<ys){
+		ye = ys;
+	}
+	if(ye>height){
+		ye = height;
 	}
 }
 
@@ -116,6 +140,10 @@ function threshup(incr){
 	else{
 		t-=5;
 	}
+}
+
+function threshDelta(val){
+	t = val;
 }
 
 function nthreshdelta(incr){
