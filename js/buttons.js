@@ -21,6 +21,7 @@ var min = -1;
 var max = -1;
 var changemin = false;
 var changemax = false;
+var setbg = false;
 var cont = true;
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
@@ -66,6 +67,10 @@ function setbinsub(){
 		else{
 			document.getElementById("binsubButton").innerHTML = "Binary Subtractor";	
 		}
+}
+
+function setBackGround(){
+	setbg = true;
 }
 
 function xDelta(vals){

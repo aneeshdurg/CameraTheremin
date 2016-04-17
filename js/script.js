@@ -52,8 +52,12 @@ function draw(){
 	var frame = readFrame();
 	var scaled = 0;
 	if(frame&&started){
-		if(counter>=100){
+		if(counter>=0){
 			if(binsub&&!initialf){
+				initialf = frame.data;
+			}
+			if(setbg){
+				setbg = false;
 				initialf = frame.data;
 			}
 			else{
