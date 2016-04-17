@@ -1,3 +1,4 @@
+
 canvas {
 	padding-left: 0;
 	padding-right: 0;
@@ -36,4 +37,19 @@ button {
 	width: 5px!important;
     padding-left: 5px!important; //add this
 }
+
+#footer-name{
+	font-family: "Arial";
+	font-size: 0.75em;
+}
+#footer-link{
+	font-family: "Arial";
+	font-size: 0.75em;
+}
+
+#footer {
+  position: absolute;
+  bottom:0;
+  height: 60px;
+} 
 
