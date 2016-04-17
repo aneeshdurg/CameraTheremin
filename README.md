@@ -7,27 +7,21 @@ Works on browsers that support getUserMedia
 
 https://aneeshdurg.github.io/CameraTheremin
 
-To use first press start theremin. There are two ways to detect the motion for the theremin.
+To begin press 'Start theremin'. 
 
-1)Thresholding method:
+Using the threshold slider, adjust the threshold until you can see your silhouette with no gaps inside.
 
-	1 - then press thresh+ until you can clearly see your sillouette
+If there is a lot of intereference from background objects, consider using the binary subtractor to remove the background. The threshold for the subtractor can be adjusted with the threshold slider.
 
-	2 - Then use xs/xe/ys/ye to crop the image to the region in which you want to move your hand
+You can optionally use the crop sliders to crop the image so that only a certain region of the image will be used for the detection.
 
-	3 - While holding your hand away from the camera, press set min to set the position for low frequencies
+While holding your hand away from the camera, press 'set min' to set the position for low frequencies
 
-	4 - While holding your hand close to the camera, press set max to set the position for high frequencies
+While holding your hand close to the camera, press 'set max' to set the position for high frequencies
 
-2)Binary background subtractor
-	
-	1 - press binsub to start the binary background subtractor
-	
-	2 - Use st+ and st- to change the threshold value for the subtractor
+If you want to clear the max and min values, press 'clear'.
 
-	3 - See steps 2-4 for the thresholding method
-
-Press calibrate to access the settings panel again. This allows you to clear the max/min values, recrop the image, etc...
+Press 'calibrate' to access the settings panel again. This allows you to change the settings even while the theremin is running. 
 
 #Python/openCV+pyo
 Requires OpenCV, pyo
