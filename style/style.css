@@ -29,5 +29,11 @@ button {
 	margin-right: 23.08%;	
 }
 
-
+.ui-slider-horizontal { height: 5px !important; }
+.ui-slider .ui-slider-handle {
+	height:5px !important;
+    	padding-top:7px!important;
+	width: 5px!important;
+    padding-left: 5px!important; //add this
+}
 
