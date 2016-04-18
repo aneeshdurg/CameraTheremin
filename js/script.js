@@ -120,38 +120,13 @@ function draw(){
 
 //adds color to data depending on val
 function increasedColor(data, val){
-	if (val==220)
-		val = 440;
 	var temp = Math.abs(val-220);
-	temp*=1275/220;
-	var r,g,b;
-	if(temp==0){
-		r = 0;
-		g = 0;
-		b = 0;
-	} else if(temp<255){
-		r = temp;
-		g = 0;
-		b = 0;
-	} else if(temp<=510){
-		r = 255;
-		g = temp-r;
-		b = 0;
-	} else if(temp<=765){
-		r = temp-510;
-		g = 255;
-		b = 0;
-	} else if(temp<=1020){
-		temp-=765;
-		r = 0;
-		g = 255;
-		b = temp;
-	} else{
-		temp-=1020;
-		r = 0;
-		g = 255-temp;
-		b = 255;
-	}
+       	temp/=11;
+	temp+=7;
+	var f = 0.3;
+	r = Math.sin(f*temp+0)*127+128;
+	g = Math.sin(f*temp+2)*127+128;
+	b = Math.sin(f*temp+4)*127+128;	
 
 	var len = data.length;
 	if(temp!=0)
