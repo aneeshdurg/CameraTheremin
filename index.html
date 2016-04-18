@@ -13,9 +13,10 @@
 		<script>
 			var started = false;
 			var playing = false;
-			var synth = new Tone.SimpleSynth().toMaster();
+			var synth = new Tone.MonoSynth().toMaster();
 			var pitchShift = new Tone.PitchShift();
 			var oldfreq = -1;
+			var offset = 0;
 			$(function(){
 				$("#threshSlider").slider({
 					max: 255,
@@ -44,16 +45,22 @@
 			}
 			function playSynth(freq, vol){
 				document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
-				if(freq>0){
-					while(Math.abs(oldfreq-freq)>0.01){
-						oldfreq = (oldfreq+freq)/2;
-						synth.setNote(oldfreq);
-					}
+				if(freq>0&&freq!=oldfreq){
+					if(!cont)
+						synth.frequency.rampTo(freq, 0.05);		
+					else
+						synth.setNote(freq);
 				}
 				if(dobinsub){
 					vol = -vol+170;
 					vol*=2;
-					synth.volume.value = vol;
+					//vol+=offset;
+					//synth.volume.value = vol;
+					if (vol<0){
+						//offset+=Math.abs(vol);
+						vol = 0;
+					}
+					synth.volume.rampTo(vol, 0.07);
 					vol = Math.floor(vol*100)/100;
 					document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
 				}

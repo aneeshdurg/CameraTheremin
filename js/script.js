@@ -151,7 +151,7 @@ function increasedColor(data, val){
 //or uses a linear function to map it to 
 //a range of frequencies
 function scale(num, mode, vol){
-	if(min<0||max<0||num==0){
+	if(min<0||max<0||num<0){
 		playSynth(0, vol);
 		return num;
 	}
