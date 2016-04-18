@@ -61,17 +61,20 @@ function draw(){
 				initialf = frame.data;
 			}
 			else{
+				var xpos = 0;
 				if(dobinsub){
-					binsub(frame.data, subThresh);
+					xpos = binsub(frame.data, subThresh, 0, 255);
 				}
-				if(dogaussblur){
-					GaussBlur(frame.data, 1.5);
-				}
-				
-				if(dothresh){
-					threshold(frame.data, t, 0, 255);
-					if(noiseThresh!=0)
-						removeNoise(frame.data, noiseThresh, 255, 0);
+				else{
+					if(dogaussblur){
+						GaussBlur(frame.data, 1.5);
+					}
+					
+					if(dothresh){
+						threshold(frame.data, t, 0, 255);
+						if(noiseThresh!=0)
+							removeNoise(frame.data, noiseThresh, 255, 0);
+					}
 				}
 				var white = countWhite(frame.data);
 				if(changemax){
@@ -89,7 +92,7 @@ function draw(){
 					min = white;
 				}
 
-				scaled = scale(white, cont); 
+				scaled = scale(white, cont, xpos); 
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -147,9 +150,9 @@ function increasedColor(data, val){
 //either sets num to preset frequencies
 //or uses a linear function to map it to 
 //a range of frequencies
-function scale(num, mode){
+function scale(num, mode, vol){
 	if(min<0||max<0||num==0){
-		playSynth(0);
+		playSynth(0, vol);
 		return num;
 	}
 	var high = max-min;
@@ -178,7 +181,7 @@ function scale(num, mode){
 			ret = 440;
 	}
 	//sends frequency to synth	
-	playSynth(ret);
+	playSynth(ret, vol);
 	return ret;
 }
 //gets frame
@@ -197,8 +200,10 @@ function readFrame(){
 //subtracts initial frame from current frame
 //and sets pixels that differ by more than
 //thresh to white
-function binsub(data, thresh){
+function binsub(data, thresh, a, b){
 	var len = data.length;
+	var xavg = 0;
+	var counter = 0;
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
@@ -210,18 +215,22 @@ function binsub(data, thresh){
 					}
 			}
 			if(replace){
-				data[k] = 255;
-				data[k+1] = 255;
-				data[k+2] = 255;
+				data[k] = a;
+				data[k+1] = a;
+				data[k+2] = a;
+				xavg+=(k/4)%width;
+				counter++;
 			}
 			else{
-				data[k] = 0;
-				data[k+1] = 0;
-				data[k+2] = 0;
+				data[k] = b;
+				data[k+1] = b;
+				data[k+2] = b;
 			}
 		
 		}
 	}
+	xavg/=counter;
+	return xavg;
 }
 //Blur function (incomplete doesn't actually use a 
 //Gaussian distrubtion)

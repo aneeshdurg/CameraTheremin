@@ -14,6 +14,7 @@
 			var started = false;
 			var playing = false;
 			var synth = new Tone.SimpleSynth().toMaster();
+			var pitchShift = new Tone.PitchShift();
 			var oldfreq = -1;
 			$(function(){
 				$("#threshSlider").slider({
@@ -41,10 +42,24 @@
 				docrop = !docrop;
 				doColorChange = !doColorChange;	
 			}
-			function playSynth(freq){
+			function playSynth(freq, vol){
 				document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
 				if(freq>0){
-					synth.setNote(freq);
+					while(Math.abs(oldfreq-freq)>0.01){
+						oldfreq = (oldfreq+freq)/2;
+						synth.setNote(oldfreq);
+					}
+				}
+				if(dobinsub){
+					vol = -vol+170;
+					vol*=2;
+					synth.volume.value = vol;
+					vol = Math.floor(vol*100)/100;
+					document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
+				}
+				else{
+					synth.volume.value = 15;
+					document.getElementById("vol").innerHTML = '';	
 				}
 				oldfreq = freq;
 			}
@@ -85,4 +100,5 @@
 			<p id="count" align="center"></p>
 		</div>
 		<p id="freq" align="center"></p>
+		<p id="vol" align="center"></p>
 	</body>
