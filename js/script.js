@@ -54,7 +54,7 @@ function draw(){
 	if(frame&&started){
 		if(counter>=0){
 			if(binsub&&!initialf){
-				bgr2gray(frame.data);
+				GaussBlur(frame.data);
 				initialf = frame.data;
 			}
 			if(setbg){
@@ -93,7 +93,6 @@ function draw(){
 						setcalibrate();
 					min = white;
 				}
-
 				scaled = scale(white, cont, xpos); 
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
@@ -206,7 +205,7 @@ function binsub(data, thresh, a, b){
 	var len = data.length;
 	var xavg = 0;
 	var counter = 0;
-	bgr2gray(data);
+	GaussBlur(data);
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j

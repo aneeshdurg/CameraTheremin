@@ -34,6 +34,7 @@
 					synth.triggerRelease();
 					document.getElementById("strt").innerHTML = "Start theremin ";
 					document.getElementById("freq").innerHTML = "Frequency: 0 Hz";
+					document.getElementById("vol").innerHTML = "Volume: 0 db";
 					document.getElementById("count").innerHTML = "Detected area: 0 px";
 					playing = false;
 				}
@@ -74,8 +75,8 @@
 					document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
 				}
 				else{
-					synth.volume.value = 15;
-					document.getElementById("vol").innerHTML = '';	
+					synth.volume.value = 10;
+					document.getElementById("vol").innerHTML = 'Volume: 10 db';	
 				}
 				oldfreq = freq;
 			}
