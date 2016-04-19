@@ -54,10 +54,12 @@ function draw(){
 	if(frame&&started){
 		if(counter>=0){
 			if(binsub&&!initialf){
+				bgr2gray(frame.data);
 				initialf = frame.data;
 			}
 			if(setbg){
 				setbg = false;
+				bgr2gray(frame.data);
 				initialf = frame.data;
 			}
 			else{
@@ -152,7 +154,7 @@ function increasedColor(data, val){
 //a range of frequencies
 function scale(num, mode, vol){
 	if(min<0||max<0||num<0){
-		playSynth(0, vol);
+		playSynth(0, -100);
 		return num;
 	}
 	var high = max-min;
@@ -204,32 +206,34 @@ function binsub(data, thresh, a, b){
 	var len = data.length;
 	var xavg = 0;
 	var counter = 0;
+	bgr2gray(data);
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			var replace = true;
 			if(Math.abs(data[k]-initialf[k])>thresh){
-				if(Math.abs(data[k+1]-initialf[k+1])>thresh)
-					if(Math.abs(data[k+2]-initialf[k+2])>thresh){
-						replace = false;
-					}
+				replace = false;
 			}
 			if(replace){
 				data[k] = a;
 				data[k+1] = a;
 				data[k+2] = a;
-				xavg+=(k/4)%width;
-				counter++;
 			}
 			else{
 				data[k] = b;
 				data[k+1] = b;
 				data[k+2] = b;
+				xavg+=(k/4)%width;
+				counter++;
 			}
 		
 		}
 	}
 	xavg/=counter;
+	if(counter<2000){
+		xavg = 0;
+	}
+	document.getElementById("xavg").innerHTML = xavg;
 	return xavg;
 }
 //Blur function (incomplete doesn't actually use a 

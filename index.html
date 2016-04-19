@@ -29,13 +29,13 @@
 			
 			function start(){ 
 				if(!started){
-					synth.triggerAttack(oldfreq);	
 					document.getElementById("strt").innerHTML = "Stop theremin";
 				} else{
 					synth.triggerRelease();
 					document.getElementById("strt").innerHTML = "Start theremin ";
 					document.getElementById("freq").innerHTML = "Frequency: 0 Hz";
 					document.getElementById("count").innerHTML = "Detected area: 0 px";
+					playing = false;
 				}
 				started = !started;
 				dogaussblur = !dogaussblur;
@@ -44,6 +44,13 @@
 				doColorChange = !doColorChange;	
 			}
 			function playSynth(freq, vol){
+				if(vol==-100){
+					return;
+				}
+				if(!playing){
+					synth.triggerAttack(oldfreq);
+					playing = true;
+				}
 				document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
 				if(freq>0&&freq!=oldfreq){
 					if(!cont)
@@ -52,14 +59,16 @@
 						synth.setNote(freq);
 				}
 				if(dobinsub){
-					vol = -vol+170;
-					vol*=2;
+					vol -= 80;
+					vol/=12;
 					//vol+=offset;
 					//synth.volume.value = vol;
 					if (vol<0){
 						//offset+=Math.abs(vol);
 						vol = 0;
 					}
+					if(vol>15)
+						vol = 15;
 					synth.volume.rampTo(vol, 0.07);
 					vol = Math.floor(vol*100)/100;
 					document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
@@ -77,6 +86,7 @@
 		<p id="header">Created by: Aneesh Durg | See the code 
 			<a href="https://github.com/aneeshdurg/CameraTheremin/">here.</a>
 		</p>
+		<p id="xavg" hidden></p>
 		<video id="vid" hidden></video>
 		<canvas id="c"></canvas>
 		<br>
