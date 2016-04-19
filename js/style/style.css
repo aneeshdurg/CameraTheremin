@@ -38,18 +38,9 @@ button {
     padding-left: 5px!important; //add this
 }
 
-#footer-name{
-	font-family: "Arial";
-	font-size: 0.75em;
-}
-#footer-link{
-	font-family: "Arial";
-	font-size: 0.75em;
+#header{
+	font-family: "Times New Roman";
+	font-size: 0.6em;
 }
 
-#footer {
-  position: absolute;
-  bottom:0;
-  height: 60px;
-} 
 

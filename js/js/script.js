@@ -52,22 +52,31 @@ function draw(){
 	var frame = readFrame();
 	var scaled = 0;
 	if(frame&&started){
-		if(counter>=100){
+		if(counter>=0){
 			if(binsub&&!initialf){
+				bgr2gray(frame.data);
+				initialf = frame.data;
+			}
+			if(setbg){
+				setbg = false;
+				bgr2gray(frame.data);
 				initialf = frame.data;
 			}
 			else{
+				var xpos = 0;
 				if(dobinsub){
-					binsub(frame.data, subThresh);
+					xpos = binsub(frame.data, subThresh, 0, 255);
 				}
-				if(dogaussblur){
-					GaussBlur(frame.data, 1.5);
-				}
-				
-				if(dothresh){
-					threshold(frame.data, t, 0, 255);
-					if(noiseThresh!=0)
-						removeNoise(frame.data, noiseThresh, 255, 0);
+				else{
+					if(dogaussblur){
+						GaussBlur(frame.data, 1.5);
+					}
+					
+					if(dothresh){
+						threshold(frame.data, t, 0, 255);
+						if(noiseThresh!=0)
+							removeNoise(frame.data, noiseThresh, 255, 0);
+					}
 				}
 				var white = countWhite(frame.data);
 				if(changemax){
@@ -85,7 +94,7 @@ function draw(){
 					min = white;
 				}
 
-				scaled = scale(white, cont); 
+				scaled = scale(white, cont, xpos); 
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -116,38 +125,13 @@ function draw(){
 
 //adds color to data depending on val
 function increasedColor(data, val){
-	if (val==220)
-		val = 440;
 	var temp = Math.abs(val-220);
-	temp*=1275/220;
-	var r,g,b;
-	if(temp==0){
-		r = 0;
-		g = 0;
-		b = 0;
-	} else if(temp<255){
-		r = temp;
-		g = 0;
-		b = 0;
-	} else if(temp<=510){
-		r = 255;
-		g = temp-r;
-		b = 0;
-	} else if(temp<=765){
-		r = temp-510;
-		g = 255;
-		b = 0;
-	} else if(temp<=1020){
-		temp-=765;
-		r = 0;
-		g = 255;
-		b = temp;
-	} else{
-		temp-=1020;
-		r = 0;
-		g = 255-temp;
-		b = 255;
-	}
+       	temp/=11;
+	temp+=7;
+	var f = 0.3;
+	r = Math.sin(f*temp+0)*127+128;
+	g = Math.sin(f*temp+2)*127+128;
+	b = Math.sin(f*temp+4)*127+128;	
 
 	var len = data.length;
 	if(temp!=0)
@@ -168,9 +152,9 @@ function increasedColor(data, val){
 //either sets num to preset frequencies
 //or uses a linear function to map it to 
 //a range of frequencies
-function scale(num, mode){
-	if(min<0||max<0||num==0){
-		playSynth(0);
+function scale(num, mode, vol){
+	if(min<0||max<0||num<0){
+		playSynth(0, -100);
 		return num;
 	}
 	var high = max-min;
@@ -199,7 +183,7 @@ function scale(num, mode){
 			ret = 440;
 	}
 	//sends frequency to synth	
-	playSynth(ret);
+	playSynth(ret, vol);
 	return ret;
 }
 //gets frame
@@ -218,31 +202,39 @@ function readFrame(){
 //subtracts initial frame from current frame
 //and sets pixels that differ by more than
 //thresh to white
-function binsub(data, thresh){
+function binsub(data, thresh, a, b){
 	var len = data.length;
+	var xavg = 0;
+	var counter = 0;
+	bgr2gray(data);
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
 			var replace = true;
 			if(Math.abs(data[k]-initialf[k])>thresh){
-				if(Math.abs(data[k+1]-initialf[k+1])>thresh)
-					if(Math.abs(data[k+2]-initialf[k+2])>thresh){
-						replace = false;
-					}
+				replace = false;
 			}
 			if(replace){
-				data[k] = 255;
-				data[k+1] = 255;
-				data[k+2] = 255;
+				data[k] = a;
+				data[k+1] = a;
+				data[k+2] = a;
 			}
 			else{
-				data[k] = 0;
-				data[k+1] = 0;
-				data[k+2] = 0;
+				data[k] = b;
+				data[k+1] = b;
+				data[k+2] = b;
+				xavg+=(k/4)%width;
+				counter++;
 			}
 		
 		}
 	}
+	xavg/=counter;
+	if(counter<2000){
+		xavg = 0;
+	}
+	document.getElementById("xavg").innerHTML = xavg;
+	return xavg;
 }
 //Blur function (incomplete doesn't actually use a 
 //Gaussian distrubtion)

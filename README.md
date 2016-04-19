@@ -3,25 +3,44 @@ A theremin controlled by your webcam
 
 #JS/getUserMedia+Tone.js
 
-Works on browsers that support getUserMedia
+Works on browsers that support getUserMedia 
 
-https://aneeshdurg.github.io/CameraTheremin
+Try it out [here](https://aneeshdurg.github.io/CameraTheremin)!
 
 To begin press 'Start theremin'. 
 
-Using the threshold slider, adjust the threshold until you can see your silhouette with no gaps inside.
+To use the theremin with volume control (sometimes less accurate):
 
-If there is a lot of intereference from background objects, consider using the binary subtractor to remove the background. The threshold for the subtractor can be adjusted with the threshold slider.
+	Press 'Binary subtractor' and then press 'set background'
 
-You can optionally use the crop sliders to crop the image so that only a certain region of the image will be used for the detection.
+	Adjust the theshold slider until the frame is mostly black
 
-While holding your hand away from the camera, press 'set min' to set the position for low frequencies
 
-While holding your hand close to the camera, press 'set max' to set the position for high frequencies
+	While holding your hand away from the camera, press 'set min' to set the position for low frequencies
+
+	While holding your hand close to the camera, press 'set max' to set the position for high frequencies`
+
+	To control the frequency, move your hand closer to/further from the camera. To control the volume, move your hand horizontally.
+
+	Try not to move your body too much as that interfers with the background subtractions.
+
+	If you've changed locations, or the background behind you has substatially changed, press 'set background' again.
+
+To use the theremin without volume control (more accurate, but not as cool. Also, doesn't work if background has too many objects)
+	
+	Using the threshold slider, adjust the threshold until you can see your silhouette with no gaps inside.
+
+	You can optionally use the crop sliders to crop the image so that only a certain region of the image will be used for the detection.
+
+	While holding your hand away from the camera, press 'set min' to set the position for low frequencies
+
+	While holding your hand close to the camera, press 'set max' to set the position for high frequencies
+
+	To control the frequency move your hand closer to/further from the camera.
 
 If you want to clear the max and min values, press 'clear'.
 
-Press 'calibrate' to access the settings panel again. This allows you to change the settings even while the theremin is running. 
+Press 'calibrate' to access the settings panel again. This allows you to change settings or enable/disable volume control while the theremin is running. 
 
 #Python/openCV+pyo
 Requires OpenCV, pyo
