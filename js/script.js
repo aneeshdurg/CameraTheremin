@@ -185,6 +185,7 @@ function scale(num, mode, vol){
 	playSynth(ret, vol);
 	return ret;
 }
+
 //gets frame
 function readFrame(){
 	try{
@@ -198,6 +199,7 @@ function readFrame(){
 	}
 	return context.getImageData(0, 0, width, height);
 }
+
 //subtracts initial frame from current frame
 //and sets pixels that differ by more than
 //thresh to white
@@ -235,6 +237,7 @@ function binsub(data, thresh, a, b){
 	document.getElementById("xavg").innerHTML = xavg;
 	return xavg;
 }
+
 //Blur function (incomplete doesn't actually use a 
 //Gaussian distrubtion)
 function GaussBlur(data, sigma){

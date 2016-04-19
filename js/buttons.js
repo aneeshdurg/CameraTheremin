@@ -23,6 +23,7 @@ var changemin = false;
 var changemax = false;
 var setbg = false;
 var cont = true;
+
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
                        navigator.mozGetUserMedia ||
@@ -52,6 +53,7 @@ function setmin(val){
 function setmax(val){
 	changemax = true;
 }
+
 function setcalibrate(){
 	calibrate = !calibrate;
 	document.getElementById("calibration").style.display = '';
@@ -81,6 +83,7 @@ function xDelta(vals){
 		xe = vals[0];
 	}
 }
+
 function yDelta(vals){
 	ys = vals[0];
 	ye = vals[1];
