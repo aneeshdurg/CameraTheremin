@@ -11,32 +11,37 @@ To begin press 'Start theremin'.
 
 To use the theremin with volume control (sometimes less accurate):
 
-	Press 'Binary subtractor' and then press 'set background'
+	-Press 'Binary subtractor' and then press 'set background'
 
-	Adjust the theshold slider until the frame is mostly black
+	-Adjust the theshold slider until the frame is mostly black
 
+	-While holding your hand away from the camera, press 'set min' to set the position for low frequencies
 
-	While holding your hand away from the camera, press 'set min' to set the position for low frequencies
+	-While holding your hand close to the camera, press 'set max' to set the position for high frequencies`
 
-	While holding your hand close to the camera, press 'set max' to set the position for high frequencies`
+	-To control the frequency, move your hand closer to/further from the camera. 
 
-	To control the frequency, move your hand closer to/further from the camera. To control the volume, move your hand horizontally.
+	-To control the volume, move your hand horizontally.
 
-	Try not to move your body too much as that interfers with the background subtractions.
+	-Try not to move your body too much as that interfers with the background subtractions.
 
-	If you've changed locations, or the background behind you has substatially changed, press 'set background' again.
+	-If you've changed locations, or the background behind you has substatially changed, 
+
+	press 'set background' again.
 
 To use the theremin without volume control (more accurate, but not as cool. Also, doesn't work if background has too many objects)
 	
-	Using the threshold slider, adjust the threshold until you can see your silhouette with no gaps inside.
+	-Using the threshold slider, adjust the threshold until you can see your silhouette with no gaps inside.
 
-	You can optionally use the crop sliders to crop the image so that only a certain region of the image will be used for the detection.
+	-You can optionally use the crop sliders to crop the image so that 
 
-	While holding your hand away from the camera, press 'set min' to set the position for low frequencies
+	only a certain region of the image will be used for the detection.
 
-	While holding your hand close to the camera, press 'set max' to set the position for high frequencies
+	-While holding your hand away from the camera, press 'set min' to set the position for low frequencies
 
-	To control the frequency move your hand closer to/further from the camera.
+	-While holding your hand close to the camera, press 'set max' to set the position for high frequencies
+
+	-To control the frequency move your hand closer to/further from the camera.
 
 If you want to clear the max and min values, press 'clear'.
 
