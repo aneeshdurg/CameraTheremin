@@ -22,6 +22,8 @@ To use the theremin with volume control (sometimes less accurate):
 	-To control the frequency, move your hand closer to/further from the camera. 
 
 	-To control the volume, move your hand horizontally.
+	
+	-To toggle volume control, press 'Volume Control(on/off)'.
 
 	-Try not to move your body too much as that interfers with the background subtractions.
 
