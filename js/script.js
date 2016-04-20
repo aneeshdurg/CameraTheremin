@@ -94,6 +94,11 @@ function draw(){
 					min = white;
 				}
 				scaled = scale(white, cont, xpos); 
+				//sends frequency to synth	
+				if(min<0||max<0||white<0)
+					playSynth(0, -100);
+				else
+					playSynth(scaled, xpos);
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -153,7 +158,6 @@ function increasedColor(data, val){
 //a range of frequencies
 function scale(num, mode, vol){
 	if(min<0||max<0||num<0){
-		playSynth(0, -100);
 		return num;
 	}
 	var high = max-min;
@@ -181,8 +185,6 @@ function scale(num, mode, vol){
 		else
 			ret = 440;
 	}
-	//sends frequency to synth	
-	playSynth(ret, vol);
 	return ret;
 }
 
@@ -248,38 +250,24 @@ function GaussBlur(data, sigma){
 			var k = i*4*width+4*j
 			try{
 				var current = 0;
-				var num = 9;
 				
-				current += data[k]*0.147;//*weight(j, sigma);
-				current += data[k+4]*0.118;//*weight(j+4, sigma);
+				current += data[k]*0.147;
+				current += data[k+4]*0.118;
 				if(k>=4){
-					current += data[k-4]*0.118;//*weight(j-4, sigma);	
+					current += data[k-4]*0.118;	
 				}
-				else{
-					num--;
-				}
-
-				current += data[k+4*width]*0.118;//*weight(j+4*width, sigma);
-				current += data[k+4*width+4]*0.095;//*weight(j+4*width+4, sigma);	
-				current += data[k+4*width-4]*0.095;//*weight(j+4*width-4, sigma);	
-
+				current += data[k+4*width]*0.118;
+				current += data[k+4*width+4]*0.095;	
+				current += data[k+4*width-4]*0.095;	
 				if(k>=4*width){
-					current += data[k-(4*width)]*0.118;//*weight(j-(4*width), sigma);
-					current += data[k-(4*width)+4]*0.095;//*weight(j-(4*width)+4, sigma);
+					current += data[k-(4*width)]*0.118;
+					current += data[k-(4*width)+4]*0.095;
 					if(k-(4*width)>=4)
-						current += data[k-(4*width)-4]*0.095;//*weight(j-(4*width)-4, sigma);
-					else
-							num--;
+						current += data[k-(4*width)-4]*0.095;
 				}
-				else{
-					num-=3;
-				}
-
-				//current/=num;
 				data[k] = current;
 				data[k+1] = current;
 				data[k+2] = current;	
-
 			} catch(e){
 				console.log(e);
 			}
@@ -300,6 +288,8 @@ function bgr2gray(data){
 }
 
 function threshold(data, thresh, a, b){
+	xavg = 0;
+	counter = 0;
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
@@ -312,9 +302,13 @@ function threshold(data, thresh, a, b){
 				data[k] = b;
 				data[k+1] = b;
 				data[k+2] = b;
+				xavg+=(k/4)%width;
+				counter++;
 			}	
 		}
 	}
+	xavg/=counter;
+	document.getElementById("xavg").innerHTML = xavg;
 }
 
 function removeNoise(data, t, a, b){
