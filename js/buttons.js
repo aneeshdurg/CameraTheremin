@@ -23,6 +23,7 @@ var changemin = false;
 var changemax = false;
 var setbg = false;
 var cont = true;
+var volEnable = true;
 
 navigator.getUserMedia = ( navigator.getUserMedia ||
                        navigator.webkitGetUserMedia ||
@@ -65,10 +66,20 @@ function setbinsub(){
 		dobinsub = !dobinsub;
 		if(dobinsub){
 			document.getElementById("binsubButton").innerHTML = "Thresholder";	
+			document.getElementById("volswitch").style.display = '';
 		}
 		else{
 			document.getElementById("binsubButton").innerHTML = "Binary Subtractor";	
+			document.getElementById("volswitch").style.display = 'none';
 		}
+}
+
+function setVolEnable(){
+	volEnable = !volEnable;
+	if(volEnable)
+		document.getElementById("volswitch").innerHTML = "Volume Control(off)";
+	else
+		document.getElementById("volswitch").innerHTML = "Volume Control(on)";
 }
 
 function setBackGround(){

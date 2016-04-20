@@ -58,7 +58,7 @@
 					else
 						synth.setNote(freq);
 				}
-				if(dobinsub){
+				if(dobinsub&&volEnable){
 					vol -= 80;
 					vol/=12;
 					//vol+=offset;
@@ -100,6 +100,7 @@
 		<div id="calibration">
 			<br>
 			<button id="binsubButton" onclick="setbinsub()">Binary Subtractor</button>
+			<button id="volswitch" style="display:none" onclick="setVolEnable()">Volume Control(off)</button>
 			<p id="sliderLabel">Threshold slider</p>
 			<div id="threshSlider"></div>
 				<p> Crop x slider</p>
