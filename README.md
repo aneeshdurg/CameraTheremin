@@ -1,7 +1,7 @@
 # CameraTheremin
 A theremin controlled by your webcam
 
-#JS/getUserMedia+Tone.js
+##JS/getUserMedia+Tone.js
 
 Works on browsers that support getUserMedia 
 
@@ -49,7 +49,7 @@ If you want to clear the max and min values, press 'clear'.
 
 Press 'calibrate' to access the settings panel again. This allows you to change settings or enable/disable volume control while the theremin is running. 
 
-#Python/openCV+pyo
+##Python/openCV+pyo
 Requires OpenCV, pyo
 
 -Try to not be in the camera's field of view when it start's detection, although it shouldn't be a problem unless your hand is in the range actually used by the camera
@@ -74,7 +74,9 @@ Requires OpenCV, pyo
 				
 				in discrete mode, moving your other hand on the vertical slider allows you bend the pitch 
 
-			moving your hand in the region dedicated to amp control will change the amplitude if your hand is still for 5s or more
+			moving your hand in the region dedicated to amp control will change the amplitude if your hand 
+			
+			is still for 5s or more
 
 	Keyboard Controls (requires focus to be on either one of the video output windows):
 	
