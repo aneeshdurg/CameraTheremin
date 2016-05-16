@@ -90,9 +90,10 @@
 				}
 				else{
 					if(tracking>=recording.length){
-						playBack = false;
-						xe = oldxe;
-						xs = oldxs;
+						startPlayBack();
+						//playBack = false;
+						//xe = oldxe;
+						//xs = oldxs;
 						//start();
 						return;
 					}
@@ -149,8 +150,8 @@
 		</div>
 		<br>
 		<div id="recording">
-			<button onclick="startRecording()">Record</button>
-			<button onclick="startPlayBack()">Playback</button>
+			<button id="rbutton" onclick="startRecording()" style="color:black">&#9210; Record</button>
+			<button id="pbutton" onclick="startPlayBack()" style="color:black">&#9205; Playback</button>
 		</div>
 		<p id="freq" align="center"></p>
 		<p id="vol" align="center"></p>

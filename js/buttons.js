@@ -50,6 +50,8 @@ function clearmaxmin(){
 function startPlayBack(){
 	playBack = !playBack;
 	if(playBack){
+		document.getElementById("pbutton").innerHTML = "&#9208; Playback";
+		document.getElementById("pbutton").style = "color:red";
 		oldxs = xs;
 		oldxe = xe;
 		xs = 0;
@@ -58,6 +60,8 @@ function startPlayBack(){
 		tracking = 0;
 	}
 	else{
+		document.getElementById("pbutton").innerHTML = "&#9205; Playback";
+		document.getElementById("pbutton").style = "color:black";
 		xs = oldxs;
 		xe = oldxe;
 	}
@@ -66,9 +70,15 @@ function startPlayBack(){
 function startRecording(){
 	record = !record;
 	if(record){
+		document.getElementById("rbutton").innerHTML = "&#9209; Record";
+		document.getElementById("rbutton").style = "color:red";
 		recording = [];
 		playBack = false;
 		tracking = 0;
+	}
+	else{
+		document.getElementById("rbutton").innerHTML = "&#9210; Record";
+		document.getElementById("rbutton").style = "color:black";
 	}
 
 }
