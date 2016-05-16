@@ -50,8 +50,16 @@ function clearmaxmin(){
 function startPlayBack(){
 	playBack = !playBack;
 	if(playBack){
+		oldxs = xs;
+		oldxe = xe;
+		xs = 0;
+		xe = 0;
 		record = false;
 		tracking = 0;
+	}
+	else{
+		xs = oldxs;
+		xe = oldxe;
 	}
 }
 

@@ -21,6 +21,7 @@
 			var playBack = false;
 			var tracking = 0;
 			var offset = 0;
+			var oldxs, oldxe;
 			$(function(){
 				$("#threshSlider").slider({
 					max: 255,
@@ -93,6 +94,8 @@
 						//start();
 						return;
 					}
+					var stepSize = width/recording.length;
+					xe = Math.floor(tracking*stepSize);
 					freq = recording[tracking][0];
 					vol = recording[tracking][1];
 					synth.frequency.rampTo(freq, 0.05);
