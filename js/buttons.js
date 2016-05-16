@@ -53,7 +53,7 @@ function startPlayBack(){
 		oldxs = xs;
 		oldxe = xe;
 		xs = 0;
-		xe = 0;
+		xe = width;
 		record = false;
 		tracking = 0;
 	}

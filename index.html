@@ -91,11 +91,13 @@
 				else{
 					if(tracking>=recording.length){
 						playBack = false;
+						xe = oldxe;
+						xs = oldxs;
 						//start();
 						return;
 					}
 					var stepSize = width/recording.length;
-					xe = Math.floor(tracking*stepSize);
+					xs = Math.floor(tracking*stepSize);
 					freq = recording[tracking][0];
 					vol = recording[tracking][1];
 					synth.frequency.rampTo(freq, 0.05);
@@ -105,6 +107,7 @@
 					tracking++;
 				}
 				oldfreq = freq;
+				return freq;
 			}
 		</script>
 	</head>

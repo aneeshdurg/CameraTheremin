@@ -96,9 +96,9 @@ function draw(){
 				scaled = scale(white, cont, xpos); 
 				//sends frequency to synth	
 				if(min<0||max<0||white<0)
-					playSynth(0, -100);
+					scaled = playSynth(0, -100);
 				else
-					playSynth(scaled, xpos);
+					scaled = playSynth(scaled, xpos);
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -150,6 +150,11 @@ function increasedColor(data, val){
 			data[i+1] = 255;
 		if(data[i+2]>255)
 			data[i+2] = 255;
+		if(playBack&&((i/4)%width>xs&&(i/4)%width<xe)){
+			data[i]   = 255-data[i];
+			data[i+1] = 255-data[i+1];
+			data[i+2] = 255-data[i+2];
+		}
 	}
 }
 
