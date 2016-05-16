@@ -16,6 +16,10 @@
 			var synth = new Tone.MonoSynth().toMaster();
 			var pitchShift = new Tone.PitchShift();
 			var oldfreq = -1;
+			var record = false;
+			var recording = [];
+			var playBack = false;
+			var tracking = 0;
 			var offset = 0;
 			$(function(){
 				$("#threshSlider").slider({
@@ -51,31 +55,51 @@
 					synth.triggerAttack(oldfreq);
 					playing = true;
 				}
-				document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
-				if(freq>0&&freq!=oldfreq){
-					if(!cont)
-						synth.frequency.rampTo(freq, 0.05);		
-					else
-						synth.setNote(freq);
-				}
-				if(dobinsub&&volEnable){
-					vol -= 80;
-					vol/=12;
-					//vol+=offset;
-					//synth.volume.value = vol;
-					if (vol<0){
-						//offset+=Math.abs(vol);
-						vol = 0;
+				if(!playBack){
+					document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
+					if(freq>0&&freq!=oldfreq){
+						if(!cont)
+							synth.frequency.rampTo(freq, 0.05);		
+						else
+							synth.setNote(freq);
 					}
-					if(vol>15)
-						vol = 15;
-					synth.volume.rampTo(vol, 0.07);
-					vol = Math.floor(vol*100)/100;
-					document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
+					if(dobinsub&&volEnable){
+						vol -= 80;
+						vol/=12;
+						//vol+=offset;
+						//synth.volume.value = vol;
+						if (vol<0){
+							//offset+=Math.abs(vol);
+							vol = 0;
+						}
+						if(vol>15)
+							vol = 15;
+						synth.volume.rampTo(vol, 0.07);
+						vol = Math.floor(vol*100)/100;
+						document.getElementById("vol").innerHTML = 'Volume: '+vol+' db';	
+					}
+					else{
+						vol = 10;
+						synth.volume.value = 10;
+						document.getElementById("vol").innerHTML = 'Volume: 10 db';	
+					}
+					if(record){
+						recording.push([freq, vol]);
+					}
 				}
 				else{
-					synth.volume.value = 10;
-					document.getElementById("vol").innerHTML = 'Volume: 10 db';	
+					if(tracking>=recording.length){
+						playBack = false;
+						start();
+						return;
+					}
+					freq = recording[tracking][0];
+					vol = recording[tracking][1];
+					synth.frequency.rampTo(freq, 0.05);
+					synth.volume.rampTo(vol, 0.07);
+					document.getElementById("freq").innerHTML = "Frequency: "+freq+" Hz";
+					document.getElementById("vol").innerHTML = "Volume: "+vol+" db";
+					tracking++;
 				}
 				oldfreq = freq;
 			}
@@ -116,6 +140,10 @@
 			<p id="maxval" align="center"></p>
 			<p id="minval" align="center"></p>
 			<p id="count" align="center"></p>
+		</div>
+		<div id="recording">
+			<button onclick="startRecording()">Record</button>
+			<button onclick="startPlayBack()">Playback</button>
 		</div>
 		<p id="freq" align="center"></p>
 		<p id="vol" align="center"></p>

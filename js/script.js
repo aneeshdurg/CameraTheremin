@@ -69,7 +69,7 @@ function draw(){
 				}
 				else{
 					if(dogaussblur){
-						GaussBlur(frame.data, 1.5);
+						//GaussBlur(frame.data, 1.5);
 					}
 					
 					if(dothresh){

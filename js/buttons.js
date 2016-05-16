@@ -47,6 +47,22 @@ function clearmaxmin(){
 		start();
 	}
 }
+function startPlayBack(){
+	playBack = !playBack;
+	if(playBack){
+		tracking = 0;
+	}
+}
+
+function startRecording(){
+	record = !record;
+	if(record){
+		recording = [];
+		playBack = false;
+		tracking = 0;
+	}
+
+}
 
 function setmin(val){
 	changemin = true;
