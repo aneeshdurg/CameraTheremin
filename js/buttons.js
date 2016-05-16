@@ -50,6 +50,7 @@ function clearmaxmin(){
 function startPlayBack(){
 	playBack = !playBack;
 	if(playBack){
+		record = false;
 		tracking = 0;
 	}
 }
