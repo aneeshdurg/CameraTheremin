@@ -60,7 +60,7 @@ function startPlayBack(){
 		tracking = 0;
 	}
 	else{
-		document.getElementById("pbutton").innerHTML = "&#9205; Playback";
+		document.getElementById("pbutton").innerHTML = "&#9209; Playback";
 		document.getElementById("pbutton").style = "color:black";
 		xs = oldxs;
 		xe = oldxe;
