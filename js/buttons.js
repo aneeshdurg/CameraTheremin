@@ -14,7 +14,7 @@ var docrop = false;
 var dothresh = false;
 var doColorChange = false; 
 var calibrate = true;
-var t = 70;
+var t = 70/255;
 var subThresh = 70;
 var noiseThresh = 0;
 var min = -1;
@@ -141,8 +141,7 @@ function yDelta(vals){
 
 function threshDelta(val){
 		subThresh = val;
-		t = val;
-	
+		t = val/255;
 }
 
 function nthreshdelta(incr){

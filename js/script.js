@@ -364,4 +364,4 @@ function countWhite(data){
 	return ret;
 }
 
-addEventListener("DOMContentLoaded", initialize);
+//addEventListener("DOMContentLoaded", initialize);

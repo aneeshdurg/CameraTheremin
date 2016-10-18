@@ -5,11 +5,88 @@
 		<link href="style/favicon.ico" rel="icon" type="image/x-icon" />
 		<link rel="stylesheet" type="text/css" href="style/style.css">
 		<link rel="stylesheet" href="style/jquery-ui.css">
+		<link rel="stylesheet" href="../webgl.css" type="text/css">
+		<script src="js/sylvester.js"></script>
+
+		<script src="js/glUtils.js"></script>
+		<script src="js/webgl-demo.js" type="text/javascript"></script>
+		
 		<script src="js/jquery-2.2.3.js"></script>
   		<script src="js/jquery-ui.js"></script>
 		<script src="js/Tone.min.js"></script>
+		
+
 		<script src="js/buttons.js"></script>
 		<script src="js/script.js"></script>
+
+    <!-- Fragment shader program -->
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+      varying highp vec2 vTextureCoord;
+      varying highp vec3 vLighting;
+      uniform sampler2D uSampler;
+      uniform highp vec2 uTextureSize;
+      uniform highp float uThreshold;
+
+      void main(void) {
+        highp vec2 onePixel = vec2(1.0, 1.0) / uTextureSize;
+
+        highp vec4 texelColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+        highp float lumin = 0.21*texelColor.r+0.72*texelColor.g+0.07*texelColor.b;
+        highp float threshold = 0.25;
+        threshold = lumin>uThreshold?0.0:1.0;
+        texelColor = vec4(threshold, threshold, threshold, 1.0);
+        gl_FragColor = vec4(texelColor.rgb * vLighting, texelColor.a);
+        //gl_FragColor = (
+        //    texture2D(uSampler, vTextureCoord) + 
+        //    texture2D(uSampler, vTextureCoord + vec2(onePixel.x, 0.0)) + 
+        //    texture2D(uSampler, vTextureCoord + vec2(-onePixel.x, 0.0))) / 3.0;
+
+        //highp vec4 colorSum = 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2(-1, -1)) * -1.0 + 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 0, -1)) *  0.0 + 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 1, -1)) *  1.0 + 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  0)) * -2.0 + 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  0)) *  0.0 + 
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  0)) *  2.0 +
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2(-1,  1)) * -1.0 +
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 0,  1)) *  0.0 +
+        //  texture2D(uSampler, vTextureCoord + onePixel * vec2( 1,  1)) *  1.0 ;
+        //gl_FragColor = vec4(colorSum.rgb, 1.0);
+
+      }
+    </script>
+
+    <!-- Vertex shader program -->
+
+    <script id="shader-vs" type="x-shader/x-vertex">
+      attribute highp vec3 aVertexNormal;
+      attribute highp vec3 aVertexPosition;
+      attribute highp vec2 aTextureCoord;
+
+      uniform highp mat4 uNormalMatrix;
+      uniform highp mat4 uMVMatrix;
+      uniform highp mat4 uPMatrix;
+
+      varying highp vec2 vTextureCoord;
+      varying highp vec3 vLighting;
+
+      void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vTextureCoord = aTextureCoord;
+
+        // Apply lighting effect
+
+        highp vec3 ambientLight = vec3(0.6, 0.6, 0.6);
+        highp vec3 directionalLightColor = vec3(0.5, 0.5, 0.75);
+        highp vec3 directionalVector = vec3(0.85, 0.8, 0.75);
+
+        highp vec4 transformedNormal = uNormalMatrix * vec4(aVertexNormal, 1.0);
+
+        highp float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+        vLighting = ambientLight + (directionalLightColor * directional);
+      }
+    </script>
 		<script>
 			var started = false;
 			var playing = false;
@@ -113,13 +190,13 @@
 		</script>
 	</head>
 
-	<body class="zoom">
+	<body class="zoom" onload="startWebgl()">
 		<p id="header">Created by: Aneesh Durg | See the code 
 			<a href="https://github.com/aneeshdurg/CameraTheremin/">here.</a>
 		</p>
 		<p id="xavg" hidden></p>
 		<video id="vid" hidden></video>
-		<canvas id="c"></canvas>
+		<canvas id="glcanvas"></canvas>
 		<br>
 		<hr width=360>
 		<br>
