@@ -1,7 +1,7 @@
 # CameraTheremin
 A theremin controlled by your webcam
 
-##JS/getUserMedia+Tone.js
+## JS/getUserMedia+Tone.js
 
 Works on browsers that support getUserMedia 
 
@@ -62,7 +62,7 @@ Requires OpenCV, pyo
 
 -Run with the flag '-e' to change the number of regions that need to be detected before the frame is considered an error
 
-####Controls:
+#### Controls:
 
 	Motion Controls (requires webcam):
 		
