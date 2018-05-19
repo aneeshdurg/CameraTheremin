@@ -57,10 +57,10 @@ class proximitySensor:
             actualcounter+=1
             formatting =(10*actualcounter/200)+1 
             if actualcounter<100:
-                print 'Place hand away from camera'
+                print('Place hand away from camera')
             else:
-                print 'Please remove hand'
-            print '['+'='*formatting+' '*(10-formatting)+']'
+                print('Please remove hand')
+            print('['+'='*formatting+' '*(10-formatting)+']')
             _, frame = Self.cap.read()
             frame = cv2.flip(frame, 1)
             frame = frame[100:300, 100:300] 
@@ -94,10 +94,10 @@ class proximitySensor:
             actualcounter+=1
             formatting =(10*actualcounter/200)+1 
             if actualcounter<100:
-                print 'Place hand close to camera'
+                print('Place hand close to camera')
             else:
-                print 'Please remove hand'
-            print '['+'='*formatting+' '*(10-formatting)+']'
+                print('Please remove hand')
+            print('['+'='*formatting+' '*(10-formatting)+']')
             _, frame = Self.cap.read()
             frame = cv2.flip(frame, 1)
             frame = frame[100:300, 100:300] 
