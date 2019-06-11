@@ -41,7 +41,7 @@ function initialize(){
 }
 
 function startStream(stream){
-	video.src = URL.createObjectURL(stream);
+	video.srcObject = stream;
 	video.play();
 
 	requestAnimationFrame(draw);
