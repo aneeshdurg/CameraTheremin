@@ -41,7 +41,7 @@ function initialize(){
 }
 
 function startStream(stream){
-	video.src = URL.createObjectURL(stream);
+	video.srcObject = stream;
 	video.play();
 
 	requestAnimationFrame(draw);
@@ -54,7 +54,7 @@ function draw(){
 	if(frame&&started){
 		if(counter>=0){
 			if(binsub&&!initialf){
-				GaussBlur(frame.data);
+				bgr2gray(frame.data);
 				initialf = frame.data;
 			}
 			if(setbg){
@@ -69,7 +69,7 @@ function draw(){
 				}
 				else{
 					if(dogaussblur){
-						//GaussBlur(frame.data, 1.5);
+						GaussBlur(frame.data, 1.5);
 					}
 					
 					if(dothresh){
@@ -93,12 +93,8 @@ function draw(){
 						setcalibrate();
 					min = white;
 				}
+
 				scaled = scale(white, cont, xpos); 
-				//sends frequency to synth	
-				if(min<0||max<0||white<0)
-					scaled = playSynth(0, -100);
-				else
-					scaled = playSynth(scaled, xpos);
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -150,11 +146,6 @@ function increasedColor(data, val){
 			data[i+1] = 255;
 		if(data[i+2]>255)
 			data[i+2] = 255;
-		if(playBack&&((i/4)%width>xs&&(i/4)%width<xe)){
-			data[i]   = 255-data[i];
-			data[i+1] = 255-data[i+1];
-			data[i+2] = 255-data[i+2];
-		}
 	}
 }
 
@@ -163,6 +154,7 @@ function increasedColor(data, val){
 //a range of frequencies
 function scale(num, mode, vol){
 	if(min<0||max<0||num<0){
+		playSynth(0, -100);
 		return num;
 	}
 	var high = max-min;
@@ -190,9 +182,10 @@ function scale(num, mode, vol){
 		else
 			ret = 440;
 	}
+	//sends frequency to synth	
+	playSynth(ret, vol);
 	return ret;
 }
-
 //gets frame
 function readFrame(){
 	try{
@@ -206,7 +199,6 @@ function readFrame(){
 	}
 	return context.getImageData(0, 0, width, height);
 }
-
 //subtracts initial frame from current frame
 //and sets pixels that differ by more than
 //thresh to white
@@ -214,7 +206,7 @@ function binsub(data, thresh, a, b){
 	var len = data.length;
 	var xavg = 0;
 	var counter = 0;
-	GaussBlur(data);
+	bgr2gray(data);
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
@@ -244,7 +236,6 @@ function binsub(data, thresh, a, b){
 	document.getElementById("xavg").innerHTML = xavg;
 	return xavg;
 }
-
 //Blur function (incomplete doesn't actually use a 
 //Gaussian distrubtion)
 function GaussBlur(data, sigma){
@@ -255,24 +246,38 @@ function GaussBlur(data, sigma){
 			var k = i*4*width+4*j
 			try{
 				var current = 0;
+				var num = 9;
 				
-				current += data[k]*0.147;
-				current += data[k+4]*0.118;
+				current += data[k]*0.147;//*weight(j, sigma);
+				current += data[k+4]*0.118;//*weight(j+4, sigma);
 				if(k>=4){
-					current += data[k-4]*0.118;	
+					current += data[k-4]*0.118;//*weight(j-4, sigma);	
 				}
-				current += data[k+4*width]*0.118;
-				current += data[k+4*width+4]*0.095;	
-				current += data[k+4*width-4]*0.095;	
+				else{
+					num--;
+				}
+
+				current += data[k+4*width]*0.118;//*weight(j+4*width, sigma);
+				current += data[k+4*width+4]*0.095;//*weight(j+4*width+4, sigma);	
+				current += data[k+4*width-4]*0.095;//*weight(j+4*width-4, sigma);	
+
 				if(k>=4*width){
-					current += data[k-(4*width)]*0.118;
-					current += data[k-(4*width)+4]*0.095;
+					current += data[k-(4*width)]*0.118;//*weight(j-(4*width), sigma);
+					current += data[k-(4*width)+4]*0.095;//*weight(j-(4*width)+4, sigma);
 					if(k-(4*width)>=4)
-						current += data[k-(4*width)-4]*0.095;
+						current += data[k-(4*width)-4]*0.095;//*weight(j-(4*width)-4, sigma);
+					else
+							num--;
 				}
+				else{
+					num-=3;
+				}
+
+				//current/=num;
 				data[k] = current;
 				data[k+1] = current;
 				data[k+2] = current;	
+
 			} catch(e){
 				console.log(e);
 			}
@@ -293,8 +298,6 @@ function bgr2gray(data){
 }
 
 function threshold(data, thresh, a, b){
-	xavg = 0;
-	counter = 0;
 	for(var i = ys; i<ye; i++){
 		for(var j = xs; j<xe; j++){
 			var k = i*4*width+4*j
@@ -307,13 +310,9 @@ function threshold(data, thresh, a, b){
 				data[k] = b;
 				data[k+1] = b;
 				data[k+2] = b;
-				xavg+=(k/4)%width;
-				counter++;
 			}	
 		}
 	}
-	xavg/=counter;
-	document.getElementById("xavg").innerHTML = xavg;
 }
 
 function removeNoise(data, t, a, b){
