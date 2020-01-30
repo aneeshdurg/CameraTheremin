@@ -5,18 +5,18 @@ function initialize(){
 	context = canvas.getContext("2d");
 
 	width = 320;//640;
-	height = 240;//480; 
+	height = 240;//480;
 	canvas.width = width;
 	canvas.height = height;
 	xe = width;
 	ye = height;
-	
+
 	$(function(){
 		$("#xSlider").slider({
 			max: width,
 			values: [0, width],
 			slide: function(event, ui){
-				xDelta(ui.values);	
+				xDelta(ui.values);
 			}
 		});
 	});
@@ -25,7 +25,7 @@ function initialize(){
 			max: height,
 			values: [0, height],
 			slide: function(event, ui){
-				yDelta(ui.values);	
+				yDelta(ui.values);
 			}
 		});
 	});
@@ -37,7 +37,10 @@ function initialize(){
 			}
 		}
 	}
-	navigator.getUserMedia(constraints, startStream, function(){});
+
+	navigator.mediaDevices.getUserMedia(constraints).then(startStream).catch(function(err) {
+        console.log("An error occurred: " + err);
+    });
 }
 
 function startStream(stream){
@@ -71,7 +74,7 @@ function draw(){
 					if(dogaussblur){
 						GaussBlur(frame.data, 1.5);
 					}
-					
+
 					if(dothresh){
 						threshold(frame.data, t, 0, 255);
 						if(noiseThresh!=0)
@@ -94,7 +97,7 @@ function draw(){
 					min = white;
 				}
 
-				scaled = scale(white, cont, xpos); 
+				scaled = scale(white, cont, xpos);
 				document.getElementById("count").innerHTML = "Detected area: "+white+" px";
 				//flip(frame.data);
 			}
@@ -105,7 +108,7 @@ function draw(){
 			} catch(e){
 				console.log(e);
 			}
-		
+
 		} else{
 			frame = readFrame();
 			if(frame&&doColorChange){
@@ -116,7 +119,7 @@ function draw(){
 				context.putImageData(frame, 0, 0);
 			} catch(e){
 				console.log(e);
-			}	
+			}
 		}
 	}
 	counter+=1;
@@ -131,7 +134,7 @@ function increasedColor(data, val){
 	var f = 0.3;
 	r = Math.sin(f*temp+0)*127+128;
 	g = Math.sin(f*temp+2)*127+128;
-	b = Math.sin(f*temp+4)*127+128;	
+	b = Math.sin(f*temp+4)*127+128;
 
 	var len = data.length;
 	if(temp!=0)
@@ -150,7 +153,7 @@ function increasedColor(data, val){
 }
 
 //either sets num to preset frequencies
-//or uses a linear function to map it to 
+//or uses a linear function to map it to
 //a range of frequencies
 function scale(num, mode, vol){
 	if(min<0||max<0||num<0){
@@ -182,7 +185,7 @@ function scale(num, mode, vol){
 		else
 			ret = 440;
 	}
-	//sends frequency to synth	
+	//sends frequency to synth
 	playSynth(ret, vol);
 	return ret;
 }
@@ -226,7 +229,7 @@ function binsub(data, thresh, a, b){
 				xavg+=(k/4)%width;
 				counter++;
 			}
-		
+
 		}
 	}
 	xavg/=counter;
@@ -236,7 +239,7 @@ function binsub(data, thresh, a, b){
 	document.getElementById("xavg").innerHTML = xavg;
 	return xavg;
 }
-//Blur function (incomplete doesn't actually use a 
+//Blur function (incomplete doesn't actually use a
 //Gaussian distrubtion)
 function GaussBlur(data, sigma){
 	bgr2gray(data);
@@ -247,19 +250,19 @@ function GaussBlur(data, sigma){
 			try{
 				var current = 0;
 				var num = 9;
-				
+
 				current += data[k]*0.147;//*weight(j, sigma);
 				current += data[k+4]*0.118;//*weight(j+4, sigma);
 				if(k>=4){
-					current += data[k-4]*0.118;//*weight(j-4, sigma);	
+					current += data[k-4]*0.118;//*weight(j-4, sigma);
 				}
 				else{
 					num--;
 				}
 
 				current += data[k+4*width]*0.118;//*weight(j+4*width, sigma);
-				current += data[k+4*width+4]*0.095;//*weight(j+4*width+4, sigma);	
-				current += data[k+4*width-4]*0.095;//*weight(j+4*width-4, sigma);	
+				current += data[k+4*width+4]*0.095;//*weight(j+4*width+4, sigma);
+				current += data[k+4*width-4]*0.095;//*weight(j+4*width-4, sigma);
 
 				if(k>=4*width){
 					current += data[k-(4*width)]*0.118;//*weight(j-(4*width), sigma);
@@ -276,7 +279,7 @@ function GaussBlur(data, sigma){
 				//current/=num;
 				data[k] = current;
 				data[k+1] = current;
-				data[k+2] = current;	
+				data[k+2] = current;
 
 			} catch(e){
 				console.log(e);
@@ -305,12 +308,12 @@ function threshold(data, thresh, a, b){
 				data[k] = a;
 				data[k+1] = a;
 				data[k+2] = a;
-			}		
+			}
 			else{
 				data[k] = b;
 				data[k+1] = b;
 				data[k+2] = b;
-			}	
+			}
 		}
 	}
 }
@@ -342,7 +345,7 @@ function removeNoise(data, t, a, b){
 						data[j+2] = a;
 						j-=4;
 						n--;
-					}	
+					}
 				}
 			}
 			n = 0;
